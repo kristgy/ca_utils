@@ -1,7 +1,7 @@
 clear all
 close all
 
-data_file = 'All sessions within period for all users_2020-06-01--2020-11-13.csv';
+data_file = 'All sessions within period for all users_2020-06-01--2021-01-01.csv';
 %date_fun = @(date_str) datetime(date_str,'InputFormat','yyyy-MM-dd''T''HH:mm:ss.SSSSSSXXX','TimeZone','Europe/Zurich');
 %date_fun = @(date_str) datetime(date_str,'InputFormat','yyyy-MM-dd''T''HH:mm:ss');
 date_fun = @(date_str) datetime(date_str,'InputFormat','yyyy-MM-dd''T''HH:mm:ssXXX','TimeZone','Europe/Zurich');
