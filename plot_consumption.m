@@ -43,7 +43,7 @@ for u = 1:length(users)
 	bar(0:23,squeeze(sum(cons_acc(u,sel_m,:,:,:),[3,5])))
 	ylabel('Consumption [kWh]')
 	xlabel('Hour of day')
-	title(sprintf('Charging of %s per month (total %.1f [kWh])', users{u}, sum(cons_acc(u,sel_m,:,:,:),[2,3,4,5])));
+	title(sprintf('Charging of %s per month (total %.1f kWh)', users{u}, sum(cons_acc(u,sel_m,:,:,:),[2,3,4,5])));
 	sums = squeeze(sum(cons_acc(u,sel_m,:,:,:),[3,4,5]))
 	legend(compose('%s (%.1f kWh)',month_l(sel_m,:),sums'),'Location','NorthWest')
 	print('-dpng',['consumption_hour_month_' users{u}])
