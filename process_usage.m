@@ -1,7 +1,9 @@
 clear all
 close all
 
-data_file = 'All sessions within period for all users_2020-06-01--2021-01-01.csv';
+data_file = 'All sessions within period for all users_2020-06-01--2021-04-01.csv';
+%data_file = 'All sessions within period for all users_2020-06-01--2021-03-16.csv';
+%data_file = 'All sessions within period for all users_2020-06-01--2021-01-01.csv';
 %date_fun = @(date_str) datetime(date_str,'InputFormat','yyyy-MM-dd''T''HH:mm:ss.SSSSSSXXX','TimeZone','Europe/Zurich');
 %date_fun = @(date_str) datetime(date_str,'InputFormat','yyyy-MM-dd''T''HH:mm:ss');
 date_fun = @(date_str) datetime(date_str,'InputFormat','yyyy-MM-dd''T''HH:mm:ssXXX','TimeZone','Europe/Zurich');
@@ -13,10 +15,10 @@ decimal_fun = @(data_str) cellfun(dottifier,data_str);
 opts = detectImportOptions(data_file);
 opts.SelectedVariableNames = {'FirstName','ConsumptionKWh','StartTime','EndTime'};
 T = readtable(data_file,opts);
-T.StartTime = strip_fun(T.StartTime);
-T.EndTime = strip_fun(T.EndTime);
-T.StartTime = date_fun(T.StartTime);
-T.EndTime = date_fun(T.EndTime);
+%T.StartTime = strip_fun(T.StartTime);
+%T.EndTime = strip_fun(T.EndTime);
+%T.StartTime = date_fun(T.StartTime);
+%T.EndTime = date_fun(T.EndTime);
 T.ConsumptionKWh = decimal_fun(T.ConsumptionKWh);
 TT = table2timetable(T,'RowTimes','StartTime');
 dur = T.EndTime-T.StartTime;
