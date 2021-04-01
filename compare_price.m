@@ -1,10 +1,13 @@
 clear all
 close all
 
+% For prices see:
+% https://www.vattenfalleldistribution.se/el-hem-till-dig/elnatspriser/
+
 sub = struct('name',{{'Enkeltariff E4', 'Tidstariff T4'}},...
-'low_price',[.32 .18],'high_price',[.32 .65],...
-'high_month',[1 2 3 11 12], 'high_day', [2:6], 'high_hour',[6:21])
-%'high_month',[1 2 3 7 8 9 10 11 12], 'high_day', [2:6], 'high_hour',[6:21])
+'low_price',[.305 .18],'high_price',[.305 .60],...
+'high_month',[1 2 3 7 8 9 10 11 12], 'high_day', [2:6], 'high_hour',[6:21])
+%'high_month',[1 2 3 11 12], 'high_day', [2:6], 'high_hour',[6:21])
 
 load('processed_usage')
 
