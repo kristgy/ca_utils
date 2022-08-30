@@ -3,7 +3,7 @@ close all
 
 run conf.m
 
-load('prices')
+load([tmp_data_dir price_file])
 
 
 plot(Prices.Time,Prices.Price/100)
