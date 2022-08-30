@@ -25,24 +25,14 @@ plot(vattenf_avg(:),telge_avg(:),'*',vattenf_avg(~idx),polyval(p,vattenf_avg(~id
 load([tmp_data_dir cons_file])
 load([tmp_data_dir price_file])
 
-%t_year_pr = squeeze(pr_full(find(price_years==target_year),:,:,:));
-
 % fixme need to add a check to verfiy that consumption and price data cover the same years
-all_us = squeeze(sum(cons_full,1,'omitnan'));
-all_hour = squeeze(sum(all_us,5,'omitnan'));
-all_day = squeeze(sum(all_hour,4,'omitnan'));
-all_mon = squeeze(sum(all_day,3,'omitnan'));
-
-cost_hour = all_hour.*pr_full;
-%cost_mon = all_mon.*telge_avg(2,:)';
-cost_mon = all_mon.*vattenf_avg;
+cost_hour = squeeze(sum(cons_full,[1 6],'omitnan')).*pr_full;
+%cost_mon = squeeze(sum(cons_full,[1 4 5 6],'omitnan')).*telge_avg;
+cost_mon = squeeze(sum(cons_full,[1 4 5 6],'omitnan')).*vattenf_avg;
 
 cost_hour_monthly = sum(cost_hour,[3,4],'omitnan')
 total_hour = sum(cost_hour,'all','omitnan')/100
 total_mon = sum(cost_mon,'all','omitnan')/100
-
-day_pr = squeeze(mean(pr_full,4,'omitnan'));
-month_pr = squeeze(mean(day_pr,3,'omitnan'));
 
 plot(1:12,cost_mon'/100)
 leg_str_1 = compose('%d faktisk (månadspris)',price_years);
