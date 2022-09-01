@@ -22,6 +22,7 @@ cons_data_dir = '../../../ref_data/';
 fig_dir = [cons_data_dir 'figures/'];
 tmp_data_dir = cons_data_dir;
 num_years = 3;
+dtfmt = 'yyyy-mm-dd';
 
 eng_tax = NaN*ones(num_years,12);
 eng_tax(1,:) = 35.3; % [öre/kWh]
