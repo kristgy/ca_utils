@@ -6,7 +6,8 @@ run conf.m
 load([tmp_data_dir cons_file])
 load([tmp_data_dir price_file])
 
-sel_usr = [6 7 8];
+%sel_usr = [5 6 7 8];
+sel_usr = 2:11;
 
 for u = sel_usr
 	eng_cost_mon = squeeze(sum(squeeze(sum(cons_full(u,:,:,:,:,:),6,'omitnan')).*[pr_full+markup],[3 4],'omitnan'));
