@@ -3,7 +3,8 @@ close all
 
 run conf.m
 
-plot_data = false;
+%plot_data = false;
+plot_data = true;
 pad_len = 19;
 dcom = @(fmt,num) strrep(sprintf(fmt,num),'.',',');
 
