@@ -9,12 +9,11 @@ import mlreportgen.report.*
 load([tmp_data_dir cons_file])
 load([tmp_data_dir price_file])
 
-%sel_usr = [6 7 8];
-sel_usr = 2:11;
+sel_usr = [6 7 8];
+%sel_usr = 2:11;
 
 for u = sel_usr
 
-	%rpt = Report([rep_dir 'myreport'], 'pdf');
 	rpt = Report([rep_dir users{u}], 'pdf');
 
 	tp = TitlePage; 
@@ -38,11 +37,14 @@ for u = sel_usr
 	lot.Style = {ResizeToFitContents(false), Width('100%')};
 	add(rpt, lot);
 
-	tableHeaderStyles = {Bold(true)};
+	tableHeaderStyles = {BackgroundColor("LightGrey"), Bold(true)}; 
+	%footerStyle = { BackgroundColor("LightCyan"), ...
+	footerStyle = { BackgroundColor("LightGrey"), ...
+                ColSep("none"), ...
+                HAlign("right"), ...
+                Bold(true), ...
+                WhiteSpace("preserve") };
 	headerLabels = ["Specificering", "Period", "Kvantitet", "Pris", "Summa"];
-	%spec = {"Abonnemang"; "Elöverföring övrig tid"; "Energiskatt"; "Moms"}
-	%spec = {"Elöverföring övrig tid"; "Energiskatt"; "Moms"}
-	%spec = {"Elöverf övr tid"; "Energiskatt"; "Moms"}
 	spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"}
 
 	y = length(cons_years);
@@ -61,13 +63,31 @@ for u = sel_usr
 	kvant = {sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); ""; ""};
 	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',eng_tax(y,m)); sprintf('%1.2f öre/kWh',markup); ""; ""};
 	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',markup*cons_mon(y,m)/100); sprintf('%1.2f kr',VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+VAT)*tot_cost_ex_VAT)};
-	tableData = [spec, period, kvant, pris, summa]
+	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
+	%totalen = {[], [], [], spec(end), summa(end)};
+	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
-	cellTbl = FormalTable(headerLabels,tableData);
+	cellTbl = FormalTable(headerLabels,tableData,totalen);
 	cellTbl.TableEntriesStyle = {HAlign('right')}; 
+	cellTbl.Header.TableEntriesHAlign = "left";
+	footer = cellTbl.Footer;
+	footer.Style = footerStyle;
+	%table.Header.Style = headerStyle;
 	%cellTbl.Style = [cellTbl.Style, tableStyles];
 	cellTbl.Header.Style = [cellTbl.Header.Style, tableHeaderStyles];
 	cellTbl.TableEntriesInnerMargin = "2pt";
+
+	     
+	grps(1) = TableColSpecGroup;
+	%grps(1).Style = {Color('red')};
+	grps(1).Span = 3;
+	specs(1) = TableColSpec;
+	%specs(1).Style = {Color('green'),HAlign('left')};
+	specs(1).Style = {Bold(true),HAlign('left')};
+	grps(1).ColSpecs = specs;
+	%table = Table(magic(5));
+	%table.ColSpecGroups = grps;
+	cellTbl.ColSpecGroups = grps;
 
 	add(rpt, cellTbl);
 
