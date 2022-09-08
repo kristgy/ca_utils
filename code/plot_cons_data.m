@@ -9,7 +9,8 @@ run conf.m
 sel_u = [1:5];
 %sel_m = [1, 2, 3, 10,11,12];
 %sel_m = [8, 9, 10];
-sel_m = [10, 11, 12];
+%sel_m = [10, 11, 12];
+sel_m = [6, 7, 8];
 
 load([tmp_data_dir cons_file]);
 

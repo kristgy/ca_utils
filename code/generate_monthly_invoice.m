@@ -17,7 +17,7 @@ for u = sel_usr
 	rpt = Report([rep_dir users{u}], 'pdf');
 
 	tp = TitlePage; 
-	tp.Title = ['Månadends elförbrukning för ' users{u}]; 
+	tp.Title = ['Månadens elförbrukning för ' users{u}]; 
 	%tp.Subtitle = 'Columns, Rows, Diagonals: All Equal Sums'; 
 	tp.Author = 'Brf. Bergshamra Gård'; 
 	append(rpt,tp); 
