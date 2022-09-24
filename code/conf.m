@@ -1,6 +1,9 @@
 clear all
 close all
 
+month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
+month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
+
 %                Jan   Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
 % our price from Telge [öre/kWh]
 telge_avg =   [NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    31.49  35.15  41.74; % 2020

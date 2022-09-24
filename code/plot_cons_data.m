@@ -42,7 +42,6 @@ set(gca,'Xlim',[0 23],'XTick',[0:23])
 legend(users(sel_u),'Location','best')
 print('-dpng',[fig_dir 'consumption_hour_user'])
 
-month_l = ['jan';'feb';'mar';'apr';'may';'jun';'jul';'aug';'sep';'oct';'nov';'dec'];
 for u = 1:length(users)
 	figure()
 	bar(0:23,squeeze(sum(cons_acc(u,:,:,:,:,:),[2,3,4,6])))

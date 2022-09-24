@@ -23,6 +23,16 @@ for u = sel_usr
 	append(rpt,tp); 
 
 	imgStyle = {ScaleToFit(true)};
+
+	%img3 = Image([fig_dir 'consumption_day_of_month_' users{u} '.png']);
+	img3 = Image([fig_dir 'consumption_day_of_month_' users{u} '.pdf']);
+	%img3.Style = imgStyle;
+	para = Paragraph(img3);
+	para.Style = [para.Style {OuterMargin("0cm","0cm","1cm","1cm")}];
+	para.HAlign = 'center';
+	%add(rpt, img3);
+	add(rpt, para);
+
 	%img1 = Image(which('figures/consumption_hour_histogram.png'));
 	img1 = Image([fig_dir 'monthly_IMD_cost_' users{u} '.png']);
 	img1.Style = imgStyle;
@@ -30,12 +40,12 @@ for u = sel_usr
 	img2 = Image([fig_dir 'consumption_hour_month_' users{u} '.png']);
 	img2.Style = imgStyle;
 
-	lot = Table({img1, ' ', img2});
-	lot.entry(1,1).Style = {Width('3.2in'), Height('3in')};
-	lot.entry(1,2).Style = {Width('.2in'), Height('3in')};
-	lot.entry(1,3).Style = {Width('3.2in'), Height('3in')};
-	lot.Style = {ResizeToFitContents(false), Width('100%')};
-	add(rpt, lot);
+%	lot = Table({img1, ' ', img2});
+%	lot.entry(1,1).Style = {Width('3.2in'), Height('3in')};
+%	lot.entry(1,2).Style = {Width('.2in'), Height('3in')};
+%	lot.entry(1,3).Style = {Width('3.2in'), Height('3in')};
+%	lot.Style = {ResizeToFitContents(false), Width('100%')};
+%	add(rpt, lot);
 
 	tableHeaderStyles = {BackgroundColor("LightGrey"), Bold(true)}; 
 	%footerStyle = { BackgroundColor("LightCyan"), ...
@@ -68,6 +78,7 @@ for u = sel_usr
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
 	cellTbl = FormalTable(headerLabels,tableData,totalen);
+	cellTbl.HAlign = 'center';
 	cellTbl.TableEntriesStyle = {HAlign('right')}; 
 	cellTbl.Header.TableEntriesHAlign = "left";
 	footer = cellTbl.Footer;
