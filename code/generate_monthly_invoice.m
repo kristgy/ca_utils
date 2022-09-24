@@ -12,7 +12,8 @@ load([tmp_data_dir price_file])
 sel_usr = [6 7 8];
 %sel_usr = 2:11;
 
-for u = sel_usr
+for u = 1:length(users)
+%for u = sel_usr
 
 	rpt = Report([rep_dir users{u}], 'pdf');
 
@@ -30,16 +31,16 @@ for u = sel_usr
 	para = Paragraph(img3);
 	para.Style = [para.Style {OuterMargin("0cm","0cm","1cm","1cm")}];
 	para.HAlign = 'center';
-	%add(rpt, img3);
 	add(rpt, para);
 
-	%img1 = Image(which('figures/consumption_hour_histogram.png'));
-	img1 = Image([fig_dir 'monthly_IMD_cost_' users{u} '.png']);
-	img1.Style = imgStyle;
-	%img2 = Image([fig_dir 'consumption_hour_histogram.png']);
-	img2 = Image([fig_dir 'consumption_hour_month_' users{u} '.png']);
-	img2.Style = imgStyle;
-
+%	Code for more figures in a table format
+%	%img1 = Image(which('figures/consumption_hour_histogram.png'));
+%	img1 = Image([fig_dir 'monthly_IMD_cost_' users{u} '.png']);
+%	img1.Style = imgStyle;
+%	%img2 = Image([fig_dir 'consumption_hour_histogram.png']);
+%	img2 = Image([fig_dir 'consumption_hour_month_' users{u} '.png']);
+%	img2.Style = imgStyle;
+%
 %	lot = Table({img1, ' ', img2});
 %	lot.entry(1,1).Style = {Width('3.2in'), Height('3in')};
 %	lot.entry(1,2).Style = {Width('.2in'), Height('3in')};
@@ -48,7 +49,6 @@ for u = sel_usr
 %	add(rpt, lot);
 
 	tableHeaderStyles = {BackgroundColor("LightGrey"), Bold(true)}; 
-	%footerStyle = { BackgroundColor("LightCyan"), ...
 	footerStyle = { BackgroundColor("LightGrey"), ...
                 ColSep("none"), ...
                 HAlign("right"), ...
@@ -74,7 +74,6 @@ for u = sel_usr
 	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',eng_tax(y,m)); sprintf('%1.2f öre/kWh',markup); ""; ""};
 	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',markup*cons_mon(y,m)/100); sprintf('%1.2f kr',VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+VAT)*tot_cost_ex_VAT)};
 	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
-	%totalen = {[], [], [], spec(end), summa(end)};
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
 	cellTbl = FormalTable(headerLabels,tableData,totalen);

@@ -26,7 +26,7 @@ for u = 1:length(users)
 	area(hours,mon_price(:)/100,'LineStyle','none','FaceColor', .75*[1 1 1]);
 	hold on 
 	h = plot(hours([1,end]),mean(mon_price,'all')*[1 1]/100,'-.');
-	l = legend(h, sprintf('Snittpris över tid %.f öre/kWh',mean(mon_price,'all')), 'Location','NorthWest')
+	l = legend(h, sprintf('Snittpris över tid %.2f öre/kWh',mean(mon_price,'all')), 'Location','NorthWest')
 	l.AutoUpdate = 'off';
 	ylabel('Pris elhandel [kr/kWh]')
 
