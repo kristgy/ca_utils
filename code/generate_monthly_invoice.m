@@ -11,6 +11,9 @@ load([tmp_data_dir price_file])
 
 sel_usr = [6 7 8];
 %sel_usr = 2:11;
+y = length(cons_years);
+%m = datetime('today').Month - 1;
+m = 1;
 
 for u = 1:length(users)
 %for u = sel_usr
@@ -57,8 +60,6 @@ for u = 1:length(users)
 	headerLabels = ["Specificering", "Period", "Kvantitet", "Pris", "Summa"];
 	spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"}
 
-	y = length(cons_years);
-	m = datetime('today').Month - 1;
 	cons_mon = squeeze(sum(cons_full(u,:,:,:,:,:),[4 5 6],'omitnan'));
 	eng_cost_mon = squeeze(sum(squeeze(sum(cons_full(u,:,:,:,:,:),6,'omitnan')).*pr_full,[3 4],'omitnan'));
 	usr_cost_trans = squeeze(sum(cons_acc(u,:,:,:,:,:),6,'omitnan')).*transf_price;
