@@ -3,13 +3,18 @@ close all
 
 run conf.m
 
+% starting invoice number
+ocr = 345436754;
+bankgiro = '6245500';
+
 import mlreportgen.dom.*
 import mlreportgen.report.*
 
 load([tmp_data_dir cons_file])
 load([tmp_data_dir price_file])
 
-sel_usr = [6 7 8];
+%sel_usr = [6 7 8];
+sel_usr = [6];
 %sel_usr = 2:11;
 y = length(cons_years);
 %m = datetime('today').Month - 1;
@@ -66,7 +71,6 @@ for u = 1:length(users)
 	trans_cost_mon = squeeze(sum(usr_cost_trans,[3 4],'omitnan'));
 	%tot_cost_ex_VAT = (eng_cost_mon+(eng_tax+markup)*cons_mon(y,m))/100;
 	tot_cost_ex_VAT = (eng_cost_mon(y,m)+(eng_tax(y,m)+markup)*cons_mon(y,m)+trans_cost_mon(y,m))/100;
-	% FIXME this fails for January
 	dtv = [cons_years(y) m 1 0 0 0];
 	dte = [cons_years(y) m+1 0 0 0 0];
 	per = compose('%s - %s',datestr(dtv,dtfmt),datestr(dte,dtfmt));
@@ -90,17 +94,29 @@ for u = 1:length(users)
 
 	     
 	grps(1) = TableColSpecGroup;
-	%grps(1).Style = {Color('red')};
 	grps(1).Span = 3;
 	specs(1) = TableColSpec;
-	%specs(1).Style = {Color('green'),HAlign('left')};
 	specs(1).Style = {Bold(true),HAlign('left')};
 	grps(1).ColSpecs = specs;
-	%table = Table(magic(5));
-	%table.ColSpecGroups = grps;
 	cellTbl.ColSpecGroups = grps;
 
 	add(rpt, cellTbl);
+
+	OCR = Paragraph('OCR');
+	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm","2cm","0cm")};
+	add(rpt, OCR);
+
+	to_pay = (1+VAT)*tot_cost_ex_VAT;
+	ore = round((to_pay-floor(to_pay))*100);
+	OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',ocr,modulo_checkdigit(ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),bankgiro);
+	ocr = ocr + 1;
+	p = Preformatted(OCR_str);
+	%p.Style = {FontFamily('OCR A Extended'),FontSize('10pt')};
+	%p.Style = {FontFamily('ocr-b-std'),FontSize('10pt'),OuterMargin("0cm","0cm","1cm","1cm")};
+	%p.Style = {FontFamily('ocr-b-std'),WhiteSpace('nowrap'),FontSize('18pt')};
+	p.Style = {FontSize('9pt'),OuterMargin("0cm","0cm","1cm","0cm")};
+	%p.HAlign = 'center';
+	add(rpt, p);
 
 	close(rpt);
 	%rptview(rpt);
