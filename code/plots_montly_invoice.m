@@ -3,7 +3,8 @@ close all
 
 run conf.m
 
-sel_m = [1];
+%sel_m = [1];
+sel_m = [2];
 sel_y = [3];
 sel_u = [4];
 

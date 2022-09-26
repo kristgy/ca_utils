@@ -18,12 +18,32 @@ sel_usr = [6];
 %sel_usr = 2:11;
 y = length(cons_years);
 %m = datetime('today').Month - 1;
-m = 1;
+%m = 1;
+m = 2;
 
 for u = 1:length(users)
 %for u = sel_usr
 
 	rpt = Report([rep_dir users{u}], 'pdf');
+
+	pageSizeObj = PageSize("11.69in","8.27in","portrait");
+	rpt.Layout.PageSize = pageSizeObj;
+
+	pageMarginsObj = PageMargins();
+	%pageMarginsObj.Top = "0.98in";
+	pageMarginsObj.Top = "0.5in";
+	%pageMarginsObj.Bottom = "0.98in";
+	pageMarginsObj.Bottom = "0in";
+	%pageMarginsObj.Left = "0.98in";
+	pageMarginsObj.Left = "0.3in";
+	%pageMarginsObj.Right = "0.98in";
+	pageMarginsObj.Right = "0.3in";
+	%pageMArginsObj.Header = "0.5in";
+	pageMArginsObj.Header = "0in";
+	%pageMarginsObj.Footer = "0.5in";
+	pageMarginsObj.Footer = "0in";
+	pageMarginsObj.Gutter = "0in";
+	rpt.Layout.PageMargins = pageMarginsObj;
 
 	tp = TitlePage; 
 	tp.Title = ['Månadens elförbrukning för ' users{u}]; 
@@ -103,7 +123,7 @@ for u = 1:length(users)
 	add(rpt, cellTbl);
 
 	OCR = Paragraph('OCR');
-	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm","2cm","0cm")};
+	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm","6.6cm","0cm")};
 	add(rpt, OCR);
 
 	to_pay = (1+VAT)*tot_cost_ex_VAT;
@@ -114,7 +134,7 @@ for u = 1:length(users)
 	%p.Style = {FontFamily('OCR A Extended'),FontSize('10pt')};
 	%p.Style = {FontFamily('ocr-b-std'),FontSize('10pt'),OuterMargin("0cm","0cm","1cm","1cm")};
 	%p.Style = {FontFamily('ocr-b-std'),WhiteSpace('nowrap'),FontSize('18pt')};
-	p.Style = {FontSize('9pt'),OuterMargin("0cm","0cm","1cm","0cm")};
+	p.Style = {FontSize('11pt'),OuterMargin("0cm","0cm",".4cm","0cm")};
 	%p.HAlign = 'center';
 	add(rpt, p);
 
