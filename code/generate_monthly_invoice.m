@@ -129,7 +129,7 @@ for u = 1:length(users)
 	QR_kod = Paragraph("QR kod för betalning i app");
 	QR_kod.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
 	add(rpt, QR_kod);
-	fig = mlreportgen.report.Figure('SnapshotFormat','pdf')
+	fig = mlreportgen.report.Figure('SnapshotFormat','pdf');
 	img = Image(getSnapshotImage(fig,rpt));
 	img.Style = {Width('2.5in'),HAlign('center'),OuterMargin("0cm","0cm","0cm","0cm")};
 	add(rpt, img);
