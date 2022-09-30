@@ -3,10 +3,6 @@ close all
 
 run conf.m
 
-% starting invoice number
-ocr = 345436754;
-bankgiro = '6245500';
-
 import mlreportgen.dom.*
 import mlreportgen.report.*
 
@@ -122,13 +118,28 @@ for u = 1:length(users)
 
 	add(rpt, cellTbl);
 
-	OCR = Paragraph('OCR');
-	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm","6.6cm","0cm")};
-	add(rpt, OCR);
-
 	to_pay = (1+VAT)*tot_cost_ex_VAT;
 	ore = round((to_pay-floor(to_pay))*100);
-	OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',ocr,modulo_checkdigit(ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),bankgiro);
+	qr = generate_qr_code(ocr,to_pay,bankgiro);
+	fQR = figure();
+	colormap(gray);
+	imagesc(qr);
+	axis image;
+	axis off;
+	QR_kod = Paragraph("QR kod för betalning i app");
+	QR_kod.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
+	add(rpt, QR_kod);
+	fig = mlreportgen.report.Figure('SnapshotFormat','pdf')
+	img = Image(getSnapshotImage(fig,rpt));
+	img.Style = {Width('2.5in'),HAlign('center'),OuterMargin("0cm","0cm","0cm","0cm")};
+	add(rpt, img);
+	close(fQR)
+
+	OCR = Paragraph('OCR');
+	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm",".7cm","0cm")};
+	add(rpt, OCR);
+
+	OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',ocr,modulo_checkdigit(ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),strrep(bankgiro,'-',''));
 	ocr = ocr + 1;
 	p = Preformatted(OCR_str);
 	%p.Style = {FontFamily('OCR A Extended'),FontSize('10pt')};

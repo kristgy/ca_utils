@@ -1,6 +1,15 @@
 clear all
 close all
 
+price_data_dir = '../price_data/';
+cons_data_dir = '../../../ref_data/';
+%fig_dir = '../figures/';
+fig_dir = [cons_data_dir 'figures/'];
+rep_dir = [cons_data_dir 'reports/'];
+tmp_data_dir = cons_data_dir;
+
+run([cons_data_dir 'private_conf.m'])
+
 month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
 month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
 
@@ -36,12 +45,6 @@ price_data_file_str = 'data*.xlsx';
 price_file = 'prices';
 cons_file = 'consumption';
 
-price_data_dir = '../price_data/';
-cons_data_dir = '../../../ref_data/';
-%fig_dir = '../figures/';
-fig_dir = [cons_data_dir 'figures/'];
-rep_dir = [cons_data_dir 'reports/'];
-tmp_data_dir = cons_data_dir;
 num_years = 3;
 dtfmt = 'yyyy-mm-dd';
 
