@@ -1,4 +1,6 @@
 function ch = modulo_checkdigit(ocr)
+% calculate a so called "10-modul" checksum accroding to the description in section 5.2.2 in
+% https://www.bankgirot.se/globalassets/dokument/anvandarmanualer/bankgiroinbetalningar_anvandarmanual_sv.pdf
 
 ocr=str2double(regexp(num2str(ocr),'\d','match'));
 
