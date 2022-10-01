@@ -4,7 +4,7 @@ close all
 run conf.m
 
 %sel_m = [1];
-sel_m = [2];
+sel_m = [9];
 sel_y = [3];
 sel_u = [4];
 
@@ -43,8 +43,9 @@ for u = 1:length(users)
 	ar(3).FaceColor = .75*[1 1 1];
 	ar(4).FaceColor = .85*[1 1 1];
 	hold on 
-	h = plot(hours([1,end]),mean(mon_price,'all')*[1 1]/100,'-.');
-	l = legend({'Energiskatt','Elöverföring','Elhandel','Moms',sprintf('Snitt elh. över tid %.2f öre/kWh',mean(mon_price,'all','omitnan'))}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
+%	h = plot(hours([1,end]),mean(mon_price,'all','omitnan')*[1 1]/100,'k-.');
+	%l = legend({'Energiskatt','Elöverföring','Elhandel','Moms',sprintf('Snitt elh. över tid %.2f öre/kWh',mean(mon_price,'all','omitnan'))}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
+	l = legend({'Energiskatt','Elöverföring',sprintf('Elhandel (snitt över tid %.2f öre/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
 	l.AutoUpdate = 'off';
 	ylabel('Pris [kr/kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);

@@ -15,7 +15,7 @@ sel_usr = [6];
 y = length(cons_years);
 %m = datetime('today').Month - 1;
 %m = 1;
-m = 2;
+m = 9;
 
 for u = 1:length(users)
 %for u = sel_usr
@@ -92,7 +92,7 @@ for u = 1:length(users)
 	per = compose('%s - %s',datestr(dtv,dtfmt),datestr(dte,dtfmt));
 	period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}}
 	kvant = {sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); ""; ""};
-	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',eng_tax(y,m)); sprintf('%1.2f öre/kWh',markup); ""; ""};
+	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',eng_tax(y,m)); sprintf('%1.2f öre/kWh',markup); sprintf('%1.1f%%',VAT*100); ""};
 	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',markup*cons_mon(y,m)/100); sprintf('%1.2f kr',VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+VAT)*tot_cost_ex_VAT)};
 	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
