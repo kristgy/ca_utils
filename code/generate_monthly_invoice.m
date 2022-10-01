@@ -10,7 +10,7 @@ load([tmp_data_dir cons_file])
 load([tmp_data_dir price_file])
 
 %sel_usr = [6 7 8];
-sel_usr = [6];
+sel_usr = [4];
 %sel_usr = 2:11;
 y = length(cons_years);
 %m = datetime('today').Month - 1;

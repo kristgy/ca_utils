@@ -37,7 +37,7 @@ for u = 1:length(users)
 	colororder([0 0 0; 1 0 0])
 
 	yyaxis left;
-	ar = area(hours,[tax(:), mon_trans(:), mon_price(:)+markup, moms(:)]/100,'LineStyle','none');
+	ar = area(hours,[tax(:)+markup, mon_trans(:), mon_price(:)+markup, moms(:)]/100,'LineStyle','none');
 	ar(1).FaceColor = .55*[1 1 1];
 	ar(2).FaceColor = .65*[1 1 1];
 	ar(3).FaceColor = .75*[1 1 1];
@@ -45,7 +45,7 @@ for u = 1:length(users)
 	hold on 
 %	h = plot(hours([1,end]),mean(mon_price,'all','omitnan')*[1 1]/100,'k-.');
 	%l = legend({'Energiskatt','Elöverföring','Elhandel','Moms',sprintf('Snitt elh. över tid %.2f öre/kWh',mean(mon_price,'all','omitnan'))}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
-	l = legend({'Energiskatt','Elöverföring',sprintf('Elhandel (snitt över tid %.2f öre/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
+	l = legend({'Energiskatt+påslag','Elöverföring',sprintf('Elhandel (snitt över tid %.2f öre/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
 	l.AutoUpdate = 'off';
 	ylabel('Pris [kr/kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
