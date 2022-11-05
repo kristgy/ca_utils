@@ -2,6 +2,7 @@ clear all
 close all
 
 price_data_dir = '../price_data/';
+% FIXME Move to G: drive
 cons_data_dir = '../../../ref_data/';
 %fig_dir = '../figures/';
 fig_dir = [cons_data_dir 'figures/'];
@@ -36,7 +37,8 @@ elen_avg =    [25.02  19.46  14.96   9.80  13.54  24.89   9.26  34.71  34.85  23
 %data_file = 'All sessions within period for all users_2021-04-01--2021-06-30.csv';
 %data_file = 'All sessions within period for all users_2020-06-01--2021-04-01.csv';
 %data_file = 'All sessions within period for all users_2020-06-01--2021-03-16.csv';
-data_file = 'All sessions within period for all users_2020-10-01--2022-10-31.csv';
+%data_file = 'All sessions within period for all users_2020-10-01--2022-10-31.csv';
+data_file = 'All sessions within period for all users_2022-10-01--2022-10-31.csv';
 
 price_data_file_str = 'data*.xlsx';
 price_file = 'prices';

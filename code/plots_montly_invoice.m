@@ -4,7 +4,7 @@ close all
 run conf.m
 
 %sel_m = [1];
-sel_m = [9];
+sel_m = [10];
 sel_y = [3];
 sel_u = [4];
 

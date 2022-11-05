@@ -9,13 +9,13 @@ import mlreportgen.report.*
 load([tmp_data_dir cons_file])
 load([tmp_data_dir price_file])
 
-%sel_usr = [6 7 8];
-sel_usr = [4];
+sel_usr = [6 7 8];
+%sel_usr = [4];
 %sel_usr = 2:11;
 y = length(cons_years);
 %m = datetime('today').Month - 1;
 %m = 1;
-m = 9;
+m = 10;
 
 for u = 1:length(users)
 %for u = sel_usr
