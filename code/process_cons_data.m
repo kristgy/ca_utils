@@ -9,9 +9,9 @@ decimal_fun = @(data_str) cellfun(dottifier,data_str);
 cons = struct();
 cons.users = struct();
 
-opts = detectImportOptions([cons_data_dir data_file]);
+opts = detectImportOptions([cf.cons_data_dir cf.data_file]);
 opts.SelectedVariableNames = {'SerialNumber','ChargerName','FirstName','LastName','Email','ConsumptionKWh','StartTime','EndTime'};
-T = readtable([cons_data_dir data_file],opts);
+T = readtable([cf.cons_data_dir cf.data_file],opts);
 T.ConsumptionKWh = decimal_fun(T.ConsumptionKWh);
 dur = T.EndTime-T.StartTime;
 
@@ -44,4 +44,4 @@ for s = 1:length(dur)
 	end
 end
 
-save([tmp_data_dir cons_file],'cons')
+save([cf.tmp_data_dir cf.cons_file],'cons')
