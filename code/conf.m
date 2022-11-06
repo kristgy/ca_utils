@@ -2,6 +2,9 @@ clear all
 close all
 
 cf = struct();
+
+cf.dcom = @(fmt,num) strrep(sprintf(fmt,num),'.',',');
+
 cf.price_data_dir = '../price_data/';
 % FIXME Move to G: drive
 cf.cons_data_dir = '../../../ref_data/';
@@ -38,8 +41,8 @@ cf.elen_avg =    [25.02  19.46  14.96   9.80  13.54  24.89   9.26  34.71  34.85 
 %cf.data_file = 'All sessions within period for all users_2021-04-01--2021-06-30.csv';
 %cf.data_file = 'All sessions within period for all users_2020-06-01--2021-04-01.csv';
 %cf.data_file = 'All sessions within period for all users_2020-06-01--2021-03-16.csv';
-%cf.data_file = 'All sessions within period for all users_2020-10-01--2022-10-31.csv';
-cf.data_file = 'All sessions within period for all users_2022-10-01--2022-10-31.csv';
+cf.data_file = 'All sessions within period for all users_2020-10-01--2022-10-31.csv';
+%cf.data_file = 'All sessions within period for all users_2022-10-01--2022-10-31.csv';
 
 cf.price_data_file_str = 'data*.xlsx';
 cf.price_file = 'prices';
