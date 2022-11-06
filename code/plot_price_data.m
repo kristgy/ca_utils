@@ -3,11 +3,11 @@ close all
 
 run conf.m
 
-load([tmp_data_dir price_file])
+load([cf.tmp_data_dir cf.price_file],'price')
 
 
-plot(Prices.Time,Prices.Price/100)
+plot(price.t_series.Time,price.t_series.Price/100)
 ylabel('Hourly Nordpool spot price [kr/kWh]')
-print('-dpng',[fig_dir 'hourly_Nordpool_spot'])
+print('-dpng',[cf.fig_dir 'hourly_Nordpool_spot'])
 
 
