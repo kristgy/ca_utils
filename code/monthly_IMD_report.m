@@ -72,7 +72,7 @@ for u = 1:length(cons.users.Email)
 				End{r} = datetime(invoice_date_end,'Format','yyyy-MM-dd');
 				Cat{r} = 'El';
 				Cost{r} = round(tot_cost_ex_VAT(y,m));
-				Text{r} = [cf.dcom('%.2f',cons_mon(y,m)) ' kWh el ' datestr(dtv,'yymmdd') '-' datestr(dte,'yymmdd')];
+				Text{r} = [cf.dcom('%.1f',cons_mon(y,m)) ' kWh el ' datestr(dtv,'yymmdd') '-' datestr(dte,'yymmdd')];
 				r = r + 1;
 			end
 		end
@@ -81,4 +81,4 @@ end
 fclose(fid);
 varNames = {'Objektsnr','Från och med','Till och med','Vad ska debiteras?','Belop exkl moms (kr)','Avitext (om annan än Vad ska debiteras?)'}; 
 imd_tab = table(Objectnr',Start',End',Cat',Cost',Text','VariableNames',varNames)
-writetable(imd_tab,[cf.rep_dir 'IMD.xlsx']);
+writetable(imd_tab,[cf.rep_dir 'IMD.xlsx'],'WriteMode','replacefile');

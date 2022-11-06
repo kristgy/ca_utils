@@ -56,8 +56,9 @@ cf.eng_tax(1,:) = 35.3; % [öre/kWh]
 cf.eng_tax(2,:) = 35.6;
 cf.eng_tax(3,:) = 36.0;
 
-%markup = 2.2; % [öre/kWh] % According to contract, ignoring Elcertificat
-cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
+%cf.markup = 2.2; % [öre/kWh] % According to contract, ignoring Elcertificat
+%cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
+cf.markup = 10; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
 
 cf.VAT = 0.25;
 
