@@ -6,21 +6,21 @@ run conf.m
 import mlreportgen.dom.*
 import mlreportgen.report.*
 
-load([tmp_data_dir cons_file])
-load([tmp_data_dir price_file])
+load([cf.tmp_data_dir cf.cons_file],'cons')
+load([cf.tmp_data_dir cf.price_file],'price')
 
 sel_usr = [6 7 8];
 %sel_usr = [4];
 %sel_usr = 2:11;
-y = length(cons_years);
+y = length(cons.years);
 %m = datetime('today').Month - 1;
 %m = 1;
 m = 10;
 
-for u = 1:length(users)
+for u = 1:length(cons.users.Email)
 %for u = sel_usr
 
-	rpt = Report([rep_dir users{u}], 'pdf');
+	rpt = Report([cf.rep_dir cons.users.FirstName{u}], 'pdf');
 
 	pageSizeObj = PageSize("11.69in","8.27in","portrait");
 	rpt.Layout.PageSize = pageSizeObj;
@@ -42,15 +42,15 @@ for u = 1:length(users)
 	rpt.Layout.PageMargins = pageMarginsObj;
 
 	tp = TitlePage; 
-	tp.Title = ['Månadens elförbrukning för ' users{u}]; 
+	tp.Title = ['Månadens elförbrukning för ' cons.users.FirstName{u}]; 
 	%tp.Subtitle = 'Columns, Rows, Diagonals: All Equal Sums'; 
 	tp.Author = 'Brf. Bergshamra Gård'; 
 	append(rpt,tp); 
 
 	imgStyle = {ScaleToFit(true)};
 
-	%img3 = Image([fig_dir 'consumption_day_of_month_' users{u} '.png']);
-	img3 = Image([fig_dir 'consumption_day_of_month_' users{u} '.pdf']);
+	%img3 = Image([fc.fig_dir 'consumption_day_of_month_' cons.users.FirstName{u} '.png']);
+	img3 = Image([cf.fig_dir 'consumption_day_of_month_' cons.users.FirstName{u} '.pdf']);
 	%img3.Style = imgStyle;
 	para = Paragraph(img3);
 	para.Style = [para.Style {OuterMargin("0cm","0cm","1cm","1cm")}];
@@ -59,10 +59,10 @@ for u = 1:length(users)
 
 %	Code for more figures in a table format
 %	%img1 = Image(which('figures/consumption_hour_histogram.png'));
-%	img1 = Image([fig_dir 'monthly_IMD_cost_' users{u} '.png']);
+%	img1 = Image([cf.fig_dir 'monthly_IMD_cost_' cons.users.FirstName{u} '.png']);
 %	img1.Style = imgStyle;
-%	%img2 = Image([fig_dir 'consumption_hour_histogram.png']);
-%	img2 = Image([fig_dir 'consumption_hour_month_' users{u} '.png']);
+%	%img2 = Image([cf.fig_dir 'consumption_hour_histogram.png']);
+%	img2 = Image([cf.fig_dir 'consumption_hour_month_' cons.users.FirstName{u} '.png']);
 %	img2.Style = imgStyle;
 %
 %	lot = Table({img1, ' ', img2});
@@ -81,19 +81,19 @@ for u = 1:length(users)
 	headerLabels = ["Specificering", "Period", "Kvantitet", "Pris", "Summa"];
 	spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"}
 
-	cons_mon = squeeze(sum(cons_full(u,:,:,:,:,:),[4 5 6],'omitnan'));
-	eng_cost_mon = squeeze(sum(squeeze(sum(cons_full(u,:,:,:,:,:),6,'omitnan')).*pr_full,[3 4],'omitnan'));
-	usr_cost_trans = squeeze(sum(cons_acc(u,:,:,:,:,:),6,'omitnan')).*transf_price;
+	cons_mon = squeeze(sum(cons.day_of_month(u,:,:,:,:,:),[4 5 6],'omitnan'));
+	eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*price.day_of_month,[3 4],'omitnan'));
+	usr_cost_trans = squeeze(sum(cons.day_of_week(u,:,:,:,:,:),6,'omitnan')).*cf.transf_price;
 	trans_cost_mon = squeeze(sum(usr_cost_trans,[3 4],'omitnan'));
-	%tot_cost_ex_VAT = (eng_cost_mon+(eng_tax+markup)*cons_mon(y,m))/100;
-	tot_cost_ex_VAT = (eng_cost_mon(y,m)+(eng_tax(y,m)+markup)*cons_mon(y,m)+trans_cost_mon(y,m))/100;
-	dtv = [cons_years(y) m 1 0 0 0];
-	dte = [cons_years(y) m+1 0 0 0 0];
-	per = compose('%s - %s',datestr(dtv,dtfmt),datestr(dte,dtfmt));
+	%tot_cost_ex_VAT = (eng_cost_mon+(cf.eng_tax+cf.markup)*cons_mon(y,m))/100;
+	tot_cost_ex_VAT = (eng_cost_mon(y,m)+(cf.eng_tax(y,m)+cf.markup)*cons_mon(y,m)+trans_cost_mon(y,m))/100;
+	dtv = [cons.years(y) m 1 0 0 0];
+	dte = [cons.years(y) m+1 0 0 0 0];
+	per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 	period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}}
 	kvant = {sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); ""; ""};
-	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',eng_tax(y,m)); sprintf('%1.2f öre/kWh',markup); sprintf('%1.1f%%',VAT*100); ""};
-	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',markup*cons_mon(y,m)/100); sprintf('%1.2f kr',VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+VAT)*tot_cost_ex_VAT)};
+	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',cf.eng_tax(y,m)); sprintf('%1.2f öre/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
+	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',cf.eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',cf.markup*cons_mon(y,m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
 	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
@@ -118,9 +118,9 @@ for u = 1:length(users)
 
 	add(rpt, cellTbl);
 
-	to_pay = (1+VAT)*tot_cost_ex_VAT;
+	to_pay = (1+cf.VAT)*tot_cost_ex_VAT;
 	ore = round((to_pay-floor(to_pay))*100);
-	qr = generate_qr_code(ocr,to_pay,bankgiro);
+	qr = generate_qr_code(cf.ocr,to_pay,cf.bankgiro);
 	fQR = figure();
 	colormap(gray);
 	imagesc(qr);
@@ -139,8 +139,8 @@ for u = 1:length(users)
 	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm",".7cm","0cm")};
 	add(rpt, OCR);
 
-	OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',ocr,modulo_checkdigit(ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),strrep(bankgiro,'-',''));
-	ocr = ocr + 1;
+	OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',cf.ocr,modulo_checkdigit(cf.ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),strrep(cf.bankgiro,'-',''));
+	cf.ocr = cf.ocr + 1;
 	p = Preformatted(OCR_str);
 	%p.Style = {FontFamily('OCR A Extended'),FontSize('10pt')};
 	%p.Style = {FontFamily('ocr-b-std'),FontSize('10pt'),OuterMargin("0cm","0cm","1cm","1cm")};
