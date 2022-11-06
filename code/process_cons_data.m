@@ -27,13 +27,14 @@ cons.day_of_month = NaN*ones(num_users,length(cons.years),12,31,24,60);
 for s = 1:length(dur)
 	Consumption = ones(floor(minutes(dur(s))),1)*T.ConsumptionKWh(s)/floor(minutes(dur(s)));
 	User = matlab.lang.makeValidName(T.Email(s));
+	if length(User{:}) == 0 
+		User = {'NN'};
+	end
 	cons.users.ChargerName(us_lut.(User{:})) = T.ChargerName(s);
 	cons.users.FirstName(us_lut.(User{:})) = T.FirstName(s);
 	cons.users.LastName(us_lut.(User{:})) = T.LastName(s);
 	cons.users.Email(us_lut.(User{:})) = T.Email(s);
-	if length(User{:}) == 0 
-		User = {'NN'};
-	end
+	cons.users.ID(us_lut.(User{:})) = User{:};
 	s_tab = timetable(Consumption,'TimeStep',minutes(1),'StartTime',T.StartTime(s));
 	for m = 1:length(Consumption)
 		cons.day_of_week(us_lut.(User{:}),year(s_tab.Time(m))-cons.years(1)+1,month(s_tab.Time(m)),weekday(s_tab.Time(m)),hour(s_tab.Time(m))+1,minute(s_tab.Time(m))+1) = ...
