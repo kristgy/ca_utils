@@ -13,10 +13,10 @@ sub = struct('name',{{'Enkeltariff E4', 'Tidstariff T4'}},...
 % NB! Careful with off by one error in high_hour due to Matlab indexing from 1.
 %'high_month',[1 2 3 7 8 9 10 11 12], 'high_day', [2:6], 'high_hour',[6:21])
 
-load([tmp_data_dir cons_file])
+load([cf.tmp_data_dir cf.cons_file],'cons')
 
-consum_high = sum(cons_acc(:,:,sub.high_month,sub.high_day,sub.high_hour,:),'all')
-consum_total = sum(cons_acc,'all')
+consum_high = sum(cons.day_of_week(:,:,sub.high_month,sub.high_day,sub.high_hour,:),'all')
+consum_total = sum(cons.day_of_week,'all')
 consum_low = consum_total - consum_high
 
 for s = 1:length(sub.name)
