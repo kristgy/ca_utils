@@ -3,13 +3,20 @@ close all
 
 run conf.m
 
+plot_data = false;
+%plot_data = true;
+
 invoice_year = 2023;
 invoice_month = 1;
 
-plot_data = false;
-%plot_data = true;
+%sel_usr = [5 6 7 8];
+%sel_usr = [3 4 6];
+%sel_usr = 2:11;
+sel_y = 3;
+sel_m = 10;
+%sel_m = [7 8 9];
+
 pad_len = 19;
-%dcom = @(fmt,num) strrep(sprintf(fmt,num),'.',',');
 
 load([cf.tmp_data_dir cf.cons_file],'cons')
 load([cf.tmp_data_dir cf.price_file],'price')
@@ -18,21 +25,14 @@ Objectnr = {};
 Start = {};
 EnEnd = {};
 
-%sel_usr = [5 6 7 8];
-sel_usr = [3 4 6];
-%sel_usr = 2:11;
-sel_y = 3;
-%sel_m = 9;
-sel_m = [7 8 9];
-
 invoice_date_start = [invoice_year invoice_month 1 0 0 0];
 invoice_date_end = [invoice_year invoice_month+1 0 0 0 0];
 
 fid = fopen([cf.rep_dir 'IMD.csv'],'w');
 
 r = 1;
-for u = sel_usr
-%for u = 1:length(cons.users.Email)
+%for u = sel_usr
+for u = 1:length(cons.users.Email)
 	cons_mon = squeeze(sum(cons.day_of_month(u,:,:,:,:,:),[4 5 6],'omitnan'));
 	% FIXME This fails if cons and price don't have the same size
 	%eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*[price.day_of_month+cf.markup],[3 4],'omitnan'));
@@ -57,23 +57,24 @@ for u = sel_usr
 		ylabel('Kostnad (inkl moms) [kr/mån]')
 		print('-dpng',[cf.fig_dir 'monthly_IMD_cost_' cons.users.FirstName{u}])
 	end
-	%for y = 1:3
 	for y = sel_y
-		%for m = 1:12
 		for m = sel_m
-			dtv = [cons.years(y) m 1 0 0 0];
-			dte = [cons.years(y) m+1 0 0 0 0];
-			imd_line = compose('%s%s%sELM kWh %s%s0%s%07d,%s%s0',datestr(now,cf.dtfmt),pad(cons.users.FirstName{u},pad_len),pad(cons.users.FirstName{u},pad_len),...
-				datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt),cf.dcom('%013.2f',cons_mon(y,m)),3,cf.dcom('%020.2f',tot_cost_ex_VAT(y,m)),cf.dcom('%013.2f',cons_mon(y,m)))
-			fprintf(fid,'%s\n',imd_line{1});
-			%Objectnr{r} = cons.users.ChargerName{u};
-			Objectnr{r} = [cf.SBC_kundnr '-' sprintf('%05d',cf.SBC_objektnr.(cons.users.ID{u}))];
-			Start{r} = datetime(invoice_date_start,'Format','yyyy-MM-dd');
-			End{r} = datetime(invoice_date_end,'Format','yyyy-MM-dd');
-			Cat{r} = 'El';
-			Cost{r} = round(tot_cost_ex_VAT(y,m));
-			Text{r} = [cf.dcom('%.2f',cons_mon(y,m)) ' kWh el ' datestr(dtv,'yymmdd') '-' datestr(dte,'yymmdd')];
-			r = r + 1;
+			if tot_cost_ex_VAT(y,m) > 0
+				dtv = [cons.years(y) m 1 0 0 0];
+				dte = [cons.years(y) m+1 0 0 0 0];
+
+				imd_line = compose('%s%s%sELM kWh %s%s0%s%07d,%s%s0',datestr(now,cf.dtfmt),pad(cons.users.FirstName{u},pad_len),pad(cons.users.FirstName{u},pad_len),...
+					datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt),cf.dcom('%013.2f',cons_mon(y,m)),3,cf.dcom('%020.2f',tot_cost_ex_VAT(y,m)),cf.dcom('%013.2f',cons_mon(y,m)))
+				fprintf(fid,'%s\n',imd_line{1});
+
+				Objectnr{r} = [cf.SBC_kundnr '-' sprintf('%05d',cf.SBC_objektnr.(cons.users.ID{u}))];
+				Start{r} = datetime(invoice_date_start,'Format','yyyy-MM-dd');
+				End{r} = datetime(invoice_date_end,'Format','yyyy-MM-dd');
+				Cat{r} = 'El';
+				Cost{r} = round(tot_cost_ex_VAT(y,m));
+				Text{r} = [cf.dcom('%.2f',cons_mon(y,m)) ' kWh el ' datestr(dtv,'yymmdd') '-' datestr(dte,'yymmdd')];
+				r = r + 1;
+			end
 		end
 	end
 end
