@@ -3,6 +3,9 @@ close all
 
 run conf.m
 
+invoice = false;
+info_str = "Kommer fakureras med SBC avin i januari 2023.";
+
 import mlreportgen.dom.*
 import mlreportgen.report.*
 
@@ -17,10 +20,10 @@ y = length(cons.years);
 %m = 1;
 m = 10;
 
-for u = 1:length(cons.users.Email)
+for u = 1:length(cons.users.ID)
 %for u = sel_usr
 
-	rpt = Report([cf.rep_dir cons.users.FirstName{u}], 'pdf');
+	rpt = Report([cf.rep_dir cons.users.ID{u}], 'pdf');
 
 	pageSizeObj = PageSize("11.69in","8.27in","portrait");
 	rpt.Layout.PageSize = pageSizeObj;
@@ -49,8 +52,8 @@ for u = 1:length(cons.users.Email)
 
 	imgStyle = {ScaleToFit(true)};
 
-	%img3 = Image([fc.fig_dir 'consumption_day_of_month_' cons.users.FirstName{u} '.png']);
-	img3 = Image([cf.fig_dir 'consumption_day_of_month_' cons.users.FirstName{u} '.pdf']);
+	%img3 = Image([fc.fig_dir 'consumption_day_of_month_' cons.users.ID{u} '.png']);
+	img3 = Image([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u} '.pdf']);
 	%img3.Style = imgStyle;
 	para = Paragraph(img3);
 	para.Style = [para.Style {OuterMargin("0cm","0cm","1cm","1cm")}];
@@ -59,10 +62,10 @@ for u = 1:length(cons.users.Email)
 
 %	Code for more figures in a table format
 %	%img1 = Image(which('figures/consumption_hour_histogram.png'));
-%	img1 = Image([cf.fig_dir 'monthly_IMD_cost_' cons.users.FirstName{u} '.png']);
+%	img1 = Image([cf.fig_dir 'monthly_IMD_cost_' cons.users.ID{u} '.png']);
 %	img1.Style = imgStyle;
 %	%img2 = Image([cf.fig_dir 'consumption_hour_histogram.png']);
-%	img2 = Image([cf.fig_dir 'consumption_hour_month_' cons.users.FirstName{u} '.png']);
+%	img2 = Image([cf.fig_dir 'consumption_hour_month_' cons.users.ID{u} '.png']);
 %	img2.Style = imgStyle;
 %
 %	lot = Table({img1, ' ', img2});
@@ -118,36 +121,42 @@ for u = 1:length(cons.users.Email)
 
 	add(rpt, cellTbl);
 
-	to_pay = (1+cf.VAT)*tot_cost_ex_VAT;
-	ore = round((to_pay-floor(to_pay))*100);
-	qr = generate_qr_code(cf.ocr,to_pay,cf.bankgiro);
-	fQR = figure();
-	colormap(gray);
-	imagesc(qr);
-	axis image;
-	axis off;
-	QR_kod = Paragraph("QR kod för betalning i app");
-	QR_kod.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
-	add(rpt, QR_kod);
-	fig = mlreportgen.report.Figure('SnapshotFormat','pdf');
-	img = Image(getSnapshotImage(fig,rpt));
-	img.Style = {Width('2.5in'),HAlign('center'),OuterMargin("0cm","0cm","0cm","0cm")};
-	add(rpt, img);
-	close(fQR)
+	if invoice
+		to_pay = (1+cf.VAT)*tot_cost_ex_VAT;
+		ore = round((to_pay-floor(to_pay))*100);
+		qr = generate_qr_code(cf.ocr,to_pay,cf.bankgiro);
+		fQR = figure();
+		colormap(gray);
+		imagesc(qr);
+		axis image;
+		axis off;
+		QR_kod = Paragraph("QR kod för betalning i app");
+		QR_kod.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
+		add(rpt, QR_kod);
+		fig = mlreportgen.report.Figure('SnapshotFormat','pdf');
+		img = Image(getSnapshotImage(fig,rpt));
+		img.Style = {Width('2.5in'),HAlign('center'),OuterMargin("0cm","0cm","0cm","0cm")};
+		add(rpt, img);
+		close(fQR)
 
-	OCR = Paragraph('OCR');
-	OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm",".7cm","0cm")};
-	add(rpt, OCR);
+		OCR = Paragraph('OCR');
+		OCR.Style = {Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm",".7cm","0cm")};
+		add(rpt, OCR);
 
-	OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',cf.ocr,modulo_checkdigit(cf.ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),strrep(cf.bankgiro,'-',''));
-	cf.ocr = cf.ocr + 1;
-	p = Preformatted(OCR_str);
-	%p.Style = {FontFamily('OCR A Extended'),FontSize('10pt')};
-	%p.Style = {FontFamily('ocr-b-std'),FontSize('10pt'),OuterMargin("0cm","0cm","1cm","1cm")};
-	%p.Style = {FontFamily('ocr-b-std'),WhiteSpace('nowrap'),FontSize('18pt')};
-	p.Style = {FontSize('11pt'),OuterMargin("0cm","0cm",".4cm","0cm")};
-	%p.HAlign = 'center';
-	add(rpt, p);
+		OCR_str = sprintf('H   # %24d%d #%8.0f %02d   %d >%25s#41#    ',cf.ocr,modulo_checkdigit(cf.ocr),floor(to_pay),ore,modulo_checkdigit(round(to_pay*100)),strrep(cf.bankgiro,'-',''));
+		cf.ocr = cf.ocr + 1;
+		p = Preformatted(OCR_str);
+		%p.Style = {FontFamily('OCR A Extended'),FontSize('10pt')};
+		%p.Style = {FontFamily('ocr-b-std'),FontSize('10pt'),OuterMargin("0cm","0cm","1cm","1cm")};
+		%p.Style = {FontFamily('ocr-b-std'),WhiteSpace('nowrap'),FontSize('18pt')};
+		p.Style = {FontSize('11pt'),OuterMargin("0cm","0cm",".4cm","0cm")};
+		%p.HAlign = 'center';
+		add(rpt, p);
+	else
+		info = Paragraph(info_str);
+		info.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
+		add(rpt, info);
+	end
 
 	close(rpt);
 	%rptview(rpt);

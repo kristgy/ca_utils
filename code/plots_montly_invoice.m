@@ -31,8 +31,7 @@ tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
 
-%for u = 1:length(users)
-for u = 1:length(cons.users.Email)
+for u = 1:length(cons.users.ID)
 %for u = sel_u
 	figure()
 	colororder([0 0 0; 1 0 0])
@@ -63,7 +62,7 @@ for u = 1:length(cons.users.Email)
 	%l.Position(2) = l.Position(2) + .25;
 	if printfigs
 	    set(gcf,'paperunits','centimeters','papersize',papersize,'paperposition',[offs_x,offs_y,papersize(1)-offs_x,papersize(2)-offs_y])
-		print([cf.fig_dir 'consumption_day_of_month_' cons.users.FirstName{u}],'-dpng')
-		print([cf.fig_dir 'consumption_day_of_month_' cons.users.FirstName{u}],'-dpdf')
+		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpng')
+		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpdf')
 	end
 end
