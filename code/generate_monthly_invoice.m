@@ -18,7 +18,8 @@ sel_usr = [6 7 8];
 y = length(cons.years);
 %m = datetime('today').Month - 1;
 %m = 1;
-m = 10;
+%m = 10;
+m = 9;
 
 for u = 1:length(cons.users.ID)
 %for u = sel_usr
