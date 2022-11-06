@@ -3,6 +3,9 @@ close all
 
 run conf.m
 
+invoice_year = 2023;
+invoice_month = 1;
+
 plot_data = false;
 %plot_data = true;
 pad_len = 19;
@@ -21,6 +24,9 @@ sel_usr = [3 4 6];
 sel_y = 3;
 %sel_m = 9;
 sel_m = [7 8 9];
+
+invoice_date_start = [invoice_year invoice_month 1 0 0 0];
+invoice_date_end = [invoice_year invoice_month+1 0 0 0 0];
 
 fid = fopen([cf.rep_dir 'IMD.csv'],'w');
 
@@ -62,11 +68,11 @@ for u = sel_usr
 			fprintf(fid,'%s\n',imd_line{1});
 			%Objectnr{r} = cons.users.ChargerName{u};
 			Objectnr{r} = [cf.SBC_kundnr '-' sprintf('%05d',cf.SBC_objektnr.(cons.users.ID{u}))];
-			Start{r} = datetime(dtv,'Format','yyyy-MM-dd');
-			End{r} = datetime(dte,'Format','yyyy-MM-dd');
+			Start{r} = datetime(invoice_date_start,'Format','yyyy-MM-dd');
+			End{r} = datetime(invoice_date_end,'Format','yyyy-MM-dd');
 			Cat{r} = 'El';
 			Cost{r} = round(tot_cost_ex_VAT(y,m));
-			Text{r} = [cf.dcom('%.2f',cons_mon(y,m)) ' kWh enl. utskick'];
+			Text{r} = [cf.dcom('%.2f',cons_mon(y,m)) ' kWh el ' datestr(dtv,'yymmdd') '-' datestr(dte,'yymmdd')];
 			r = r + 1;
 		end
 	end
