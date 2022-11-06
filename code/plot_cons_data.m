@@ -12,54 +12,54 @@ sel_u = [1:5];
 %sel_m = [10, 11, 12];
 sel_m = [6, 7, 8];
 
-load([tmp_data_dir cons_file]);
+load([cf.tmp_data_dir cf.cons_file],'cons');
 
 figure()
-bar(squeeze(sum(cons_acc,[1,2,4,5,6]))')
+bar(squeeze(sum(cons.day_of_week,[1,2,4,5,6]))')
 ylabel('Consumption [kWh]')
 xlabel('Month')
-print('-dpng',[fig_dir 'consumption_month'])
+print('-dpng',[cf.fig_dir 'consumption_month'])
 
 figure()
-bar(squeeze(sum(cons_acc,[1,2,3,5,6]))')
+bar(squeeze(sum(cons.day_of_week,[1,2,3,5,6]))')
 ylabel('Consumption [kWh]')
 xlabel('Day of week')
-print('-dpng',[fig_dir 'consumption_weekday'])
+print('-dpng',[cf.fig_dir 'consumption_weekday'])
 
 figure()
-bar(0:23,squeeze(sum(cons_acc,[1,2,3,4,6]))')
+bar(0:23,squeeze(sum(cons.day_of_week,[1,2,3,4,6]))')
 ylabel('Consumption [kWh]')
 xlabel('Hour of day')
 set(gca,'XTick',[0:23])
-print('-dpng',[fig_dir 'consumption_hour'])
+print('-dpng',[cf.fig_dir 'consumption_hour'])
 
 figure()
-plot(0:23,squeeze(sum(cons_acc(sel_u,:,:,:,:,:),[2,3,4,6])))
+plot(0:23,squeeze(sum(cons.day_of_week(sel_u,:,:,:,:,:),[2,3,4,6])))
 ylabel('Consumption [kWh]')
 xlabel('Hour of day')
 set(gca,'Xlim',[0 23],'XTick',[0:23])
-%legend(users(sel_u),'Location','NorthWest')
-legend(users(sel_u),'Location','best')
-print('-dpng',[fig_dir 'consumption_hour_user'])
+%legend(cons.users.FirstName(sel_u),'Location','NorthWest')
+legend(cons.users.FirstName(sel_u),'Location','best')
+print('-dpng',[cf.fig_dir 'consumption_hour_user'])
 
-for u = 1:length(users)
+for u = 1:length(cons.users.Email)
 	figure()
-	bar(0:23,squeeze(sum(cons_acc(u,:,:,:,:,:),[2,3,4,6])))
+	bar(0:23,squeeze(sum(cons.day_of_week(u,:,:,:,:,:),[2,3,4,6])))
 	ylabel('Consumption [kWh]')
 	xlabel('Hour of day')
 	set(gca,'XTick',[0:23])
-	%legend(users(u),'Location','NorthWest')
-	legend(users(u),'Location','best')
-	print('-dpng',[fig_dir 'consumption_hour_' users{u}])
+	%legend(cons.users.FirstName(u),'Location','NorthWest')
+	legend(cons.users.FirstName(u),'Location','best')
+	print('-dpng',[cf.fig_dir 'consumption_hour_' cons.users.FirstName{u}])
 
 	figure()
-	plot(0:23,squeeze(sum(cons_acc(u,:,sel_m,:,:,:),[2,4,6])))
+	plot(0:23,squeeze(sum(cons.day_of_week(u,:,sel_m,:,:,:),[2,4,6])))
 	ylabel('Consumption [kWh]')
 	xlabel('Hour of day')
 	set(gca,'Xlim',[0 23],'XTick',[0:23])
-	title(sprintf('Charging of %s per month (total %.1f kWh)', users{u}, sum(cons_acc(u,:,sel_m,:,:,:),[2,3,4,5,6])));
-	sums = squeeze(sum(cons_acc(u,:,sel_m,:,:,:),[2,4,5,6]));
-	%legend(compose('%s (%.1f kWh)',month_l(sel_m,:),sums),'Location','NorthWest')
-	legend(compose('%s (%.1f kWh)',month_l(sel_m,:),sums),'Location','best')
-	print('-dpng',[fig_dir 'consumption_hour_month_' users{u}])
+	title(sprintf('Charging of %s per month (total %.1f kWh)', cons.users.FirstName{u}, sum(cons.day_of_week(u,:,sel_m,:,:,:),[2,3,4,5,6])));
+	sums = squeeze(sum(cons.day_of_week(u,:,sel_m,:,:,:),[2,4,5,6]));
+	%legend(compose('%s (%.1f kWh)',cf.month_l(sel_m,:),sums),'Location','NorthWest')
+	legend(compose('%s (%.1f kWh)',cf.month_l(sel_m,:),sums),'Location','best')
+	print('-dpng',[cf.fig_dir 'consumption_hour_month_' cons.users.FirstName{u}])
 end
