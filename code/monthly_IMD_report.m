@@ -13,6 +13,7 @@ invoice_month = 1;
 %sel_usr = [3 4 6];
 %sel_usr = 2:11;
 sel_y = 3;
+year = 2022;
 sel_m = 10;
 %sel_m = [7 8 9];
 
@@ -37,9 +38,14 @@ for u = 1:length(cons.users.Email)
 	% FIXME This fails if cons and price don't have the same size
 	%eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*[price.day_of_month+cf.markup],[3 4],'omitnan'));
 	eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*price.day_of_month,[3 4],'omitnan'));
+	% new calculation code
+	%[cons_day_mon, energy, markup]  = cost_eng_usr_hourly(u,year,cons,price,cf);
+	%[cons_mon_new, energy]  = cost_eng_usr_monthly(u,year,cons,cf)
 	%eng_tax_mon = cons_mon.*cf.eng_tax;
 	usr_cost_trans = squeeze(sum(cons.day_of_week(u,:,:,:,:,:),6,'omitnan')).*cf.transf_price;
 	trans_cost_mon = squeeze(sum(usr_cost_trans,[3 4],'omitnan'));
+	% new calculation code
+	%[cons_day_week, transport, engtax]  = cost_transport_usr(u,year,cons,cf);
 	%tot_cost = (1+cf.VAT)*(eng_cost_mon+eng_tax_mon)/100;
 	tot_cost_ex_VAT = (eng_cost_mon+(cf.eng_tax+cf.markup).*cons_mon+trans_cost_mon)/100;
 	if plot_data
