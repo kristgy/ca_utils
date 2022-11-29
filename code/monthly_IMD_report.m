@@ -24,7 +24,7 @@ load([cf.tmp_data_dir cf.price_file],'price')
 
 Objectnr = {};
 Start = {};
-EnEnd = {};
+End = {};
 
 invoice_date_start = [invoice_year invoice_month 1 0 0 0];
 invoice_date_end = [invoice_year invoice_month+1 0 0 0 0];
@@ -34,13 +34,13 @@ fid = fopen([cf.rep_dir 'IMD.csv'],'w');
 r = 1;
 %for u = sel_usr
 for u = 1:length(cons.users.Email)
+	% new calculation code
+	[cons_day_mon, energy, markup]  = cost_eng_usr_hourly(u,year,cons,price,cf);
+	%[cons_mon, energy]  = cost_eng_usr_monthly(u,year,cons,cf)
 	cons_mon = squeeze(sum(cons.day_of_month(u,:,:,:,:,:),[4 5 6],'omitnan'));
 	% FIXME This fails if cons and price don't have the same size
 	%eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*[price.day_of_month+cf.markup],[3 4],'omitnan'));
 	eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*price.day_of_month,[3 4],'omitnan'));
-	% new calculation code
-	%[cons_day_mon, energy, markup]  = cost_eng_usr_hourly(u,year,cons,price,cf);
-	%[cons_mon_new, energy]  = cost_eng_usr_monthly(u,year,cons,cf)
 	%eng_tax_mon = cons_mon.*cf.eng_tax;
 	usr_cost_trans = squeeze(sum(cons.day_of_week(u,:,:,:,:,:),6,'omitnan')).*cf.transf_price;
 	trans_cost_mon = squeeze(sum(usr_cost_trans,[3 4],'omitnan'));

@@ -4,6 +4,7 @@ close all
 run conf.m
 
 invoice = false;
+%invoice = true;
 info_str = "Kommer fakureras med SBC avin i januari 2023.";
 
 import mlreportgen.dom.*
@@ -13,16 +14,17 @@ load([cf.tmp_data_dir cf.cons_file],'cons')
 load([cf.tmp_data_dir cf.price_file],'price')
 
 sel_usr = [6 7 8];
-%sel_usr = [4];
+sel_usr = [4];
 %sel_usr = 2:11;
-y = length(cons.years);
+%y = length(cons.years);
+yr = 2022;
 %m = datetime('today').Month - 1;
 %m = 1;
 m = 10;
 %m = 9;
 
-for u = 1:length(cons.users.ID)
-%for u = sel_usr
+%for u = 1:length(cons.users.ID)
+for u = sel_usr
 
 	rpt = Report([cf.rep_dir cons.users.ID{u}], 'pdf');
 
@@ -85,19 +87,35 @@ for u = 1:length(cons.users.ID)
 	headerLabels = ["Specificering", "Period", "Kvantitet", "Pris", "Summa"];
 	spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"}
 
-	cons_mon = squeeze(sum(cons.day_of_month(u,:,:,:,:,:),[4 5 6],'omitnan'));
-	eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*price.day_of_month,[3 4],'omitnan'));
-	usr_cost_trans = squeeze(sum(cons.day_of_week(u,:,:,:,:,:),6,'omitnan')).*cf.transf_price;
-	trans_cost_mon = squeeze(sum(usr_cost_trans,[3 4],'omitnan'));
-	%tot_cost_ex_VAT = (eng_cost_mon+(cf.eng_tax+cf.markup)*cons_mon(y,m))/100;
-	tot_cost_ex_VAT = (eng_cost_mon(y,m)+(cf.eng_tax(y,m)+cf.markup)*cons_mon(y,m)+trans_cost_mon(y,m))/100;
-	dtv = [cons.years(y) m 1 0 0 0];
-	dte = [cons.years(y) m+1 0 0 0 0];
+	% The old code
+%	cons_mon = squeeze(sum(cons.day_of_month(u,:,:,:,:,:),[4 5 6],'omitnan'));
+%	eng_cost_mon = squeeze(sum(squeeze(sum(cons.day_of_month(u,:,:,:,:,:),6,'omitnan')).*price.day_of_month,[3 4],'omitnan'));
+%	usr_cost_trans = squeeze(sum(cons.day_of_week(u,:,:,:,:,:),6,'omitnan')).*cf.transf_price;
+%	trans_cost_mon = squeeze(sum(usr_cost_trans,[3 4],'omitnan'));
+%	%tot_cost_ex_VAT = (eng_cost_mon+(cf.eng_tax+cf.markup)*cons_mon(y,m))/100;
+%	tot_cost_ex_VAT = (eng_cost_mon(y,m)+(cf.eng_tax(y,m)+cf.markup)*cons_mon(y,m)+trans_cost_mon(y,m))/100;
+%	dtv = [cons.years(y) m 1 0 0 0];
+%	dte = [cons.years(y) m+1 0 0 0 0];
+%	per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
+%	period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}}
+%	kvant = {sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); ""; ""};
+%	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',cf.eng_tax(y,m)); sprintf('%1.2f öre/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
+%	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',cf.eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',cf.markup*cons_mon(y,m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
+%	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
+%	totalen = [' ', ' ', ' ', spec(end), summa(end)];
+
+	% New code with functions
+	[cons_mon, energy]  = cost_eng_usr_monthly(u,yr,cons,cf)
+	[cons_day_mon, eng_cost_mon, markup]  = cost_eng_usr_hourly(u,yr,cons,price,cf);
+	[cons_day_week, trans_cost_mon, eng_tax]  = cost_transport_usr(u,yr,cons,cf);
+	tot_cost_ex_VAT = (eng_cost_mon(m)+eng_tax(m)+markup(m)+trans_cost_mon(m))/100;
+	dtv = [yr m 1 0 0 0];
+	dte = [yr m+1 0 0 0 0];
 	per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 	period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}}
-	kvant = {sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); sprintf('%1.1f kWh',cons_mon(y,m)); ""; ""};
-	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',trans_cost_mon(y,m)/cons_mon(y,m)); sprintf('%1.2f öre/kWh',cf.eng_tax(y,m)); sprintf('%1.2f öre/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
-	summa = {sprintf('%1.2f kr',eng_cost_mon(y,m)/100); sprintf('%1.2f kr',trans_cost_mon(y,m)/100); sprintf('%1.2f kr',cf.eng_tax(y,m)*cons_mon(y,m)/100); sprintf('%1.2f kr',cf.markup*cons_mon(y,m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
+	kvant = {sprintf('%1.1f kWh',cons_mon(m)); sprintf('%1.1f kWh',cons_mon(m)); sprintf('%1.1f kWh',cons_mon(m)); sprintf('%1.1f kWh',cons_mon(m)); ""; ""};
+	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(m)/cons_mon(m)); sprintf('%1.2f öre/kWh',trans_cost_mon(m)/cons_mon(m)); sprintf('%1.2f öre/kWh',eng_tax(m)); sprintf('%1.2f öre/kWh',markup(m)); sprintf('%1.1f%%',cf.VAT*100); ""};
+	summa = {sprintf('%1.2f kr',eng_cost_mon(m)/100); sprintf('%1.2f kr',trans_cost_mon(m)/100); sprintf('%1.2f kr',eng_tax(m)*cons_mon(m)/100); sprintf('%1.2f kr',markup(m)*cons_mon(m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
 	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
