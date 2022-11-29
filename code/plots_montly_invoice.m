@@ -4,9 +4,11 @@ close all
 run conf.m
 
 %sel_m = [1];
-sel_m = [10];
-sel_y = [3];
-%sel_u = [4];
+%sel_m = [10];
+sel_m = [11];
+sel_y = [2];
+%sel_y = [3];
+sel_u = [4];
 
 papersize = [18 8];
 offs_x = -.9;
@@ -17,13 +19,18 @@ printfigs = 1;
 load([cf.tmp_data_dir cf.cons_file],'cons');
 load([cf.tmp_data_dir cf.price_file],'price')
 
-cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
-mon_price = transpose(squeeze(price.day_of_month(sel_y,sel_m,:,:)));
 num_days_mon = datetime(price.years(sel_y),sel_m+1,0).Day;
 hours = 1:24*31;
 days = 1:31;
 start_weekday_mon = weekday(sprintf('%d-%d-01',price.years(sel_y),sel_m));
 weekdays = mod(start_weekday_mon+days-2,7) + 1;
+
+cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
+if cf.hourly_prices
+	mon_price = transpose(squeeze(price.day_of_month(sel_y,sel_m,:,:)));
+else
+	mon_price = cf.telge_avg(sel_y,sel_m)*ones(24,31);
+end
 mon_trans = transpose(squeeze(cf.transf_price(sel_y,sel_m,weekdays,:)));
 mon_trans(:,num_days_mon+1:end) = NaN;
 tax = cf.eng_tax(sel_y)*ones(24,31);
@@ -31,8 +38,8 @@ tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
 
-for u = 1:length(cons.users.ID)
-%for u = sel_u
+%for u = 1:length(cons.users.ID)
+for u = sel_u
 	figure()
 	colororder([0 0 0; 1 0 0])
 

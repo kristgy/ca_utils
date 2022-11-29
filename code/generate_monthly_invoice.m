@@ -14,7 +14,7 @@ load([cf.tmp_data_dir cf.cons_file],'cons')
 load([cf.tmp_data_dir cf.price_file],'price')
 
 sel_usr = [6 7 8];
-sel_usr = [4];
+%sel_usr = [4];
 %sel_usr = 2:11;
 %y = length(cons.years);
 yr = 2022;

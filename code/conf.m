@@ -13,7 +13,7 @@ cf.fig_dir = [cf.cons_data_dir 'figures/'];
 cf.rep_dir = [cf.cons_data_dir 'reports/'];
 cf.tmp_data_dir = cf.cons_data_dir;
 
-run([cf.cons_data_dir 'private_conf.m'])
+run([cf.cons_data_dir 'private_conf.m']);
 
 cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
@@ -57,9 +57,14 @@ cf.eng_tax(1,:) = 35.3; % [öre/kWh]
 cf.eng_tax(2,:) = 35.6;
 cf.eng_tax(3,:) = 36.0;
 
+% use hourly price or average monthly price
+%cf.hourly_prices = true;
+cf.hourly_prices = false;
+
 %cf.markup = 2.2; % [öre/kWh] % According to contract, ignoring Elcertificat
 %cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
-cf.markup = 10; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
+%cf.markup = 10; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
+cf.markup = 0; % [öre/kWh] % When running monthly average price
 
 cf.VAT = 0.25;
 
