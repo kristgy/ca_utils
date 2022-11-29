@@ -4,10 +4,10 @@ close all
 run conf.m
 
 %sel_m = [1];
-%sel_m = [10];
-sel_m = [11];
-sel_y = [2];
-%sel_y = [3];
+sel_m = [10];
+%sel_m = [11];
+%sel_y = [2];
+sel_y = [3];
 sel_u = [4];
 
 papersize = [18 8];

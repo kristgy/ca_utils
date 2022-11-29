@@ -13,11 +13,12 @@ import mlreportgen.report.*
 load([cf.tmp_data_dir cf.cons_file],'cons')
 load([cf.tmp_data_dir cf.price_file],'price')
 
-sel_usr = [6 7 8];
-%sel_usr = [4];
+%sel_usr = [6 7 8];
+sel_usr = [4];
 %sel_usr = 2:11;
 %y = length(cons.years);
 yr = 2022;
+e_y_idx = find(cf.years==yr);
 %m = datetime('today').Month - 1;
 %m = 1;
 m = 10;
@@ -105,8 +106,11 @@ for u = sel_usr
 %	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
 	% New code with functions
-	[cons_mon, energy]  = cost_eng_usr_monthly(u,yr,cons,cf)
+	[cons_mon, eng_cost]  = cost_eng_usr_monthly(u,yr,cons,cf)
 	[cons_day_mon, eng_cost_mon, markup]  = cost_eng_usr_hourly(u,yr,cons,price,cf);
+	if ~cf.hourly_prices
+		eng_cost_mon = eng_cost;
+	end
 	[cons_day_week, trans_cost_mon, eng_tax]  = cost_transport_usr(u,yr,cons,cf);
 	tot_cost_ex_VAT = (eng_cost_mon(m)+eng_tax(m)+markup(m)+trans_cost_mon(m))/100;
 	dtv = [yr m 1 0 0 0];
@@ -114,8 +118,8 @@ for u = sel_usr
 	per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 	period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}}
 	kvant = {sprintf('%1.1f kWh',cons_mon(m)); sprintf('%1.1f kWh',cons_mon(m)); sprintf('%1.1f kWh',cons_mon(m)); sprintf('%1.1f kWh',cons_mon(m)); ""; ""};
-	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(m)/cons_mon(m)); sprintf('%1.2f öre/kWh',trans_cost_mon(m)/cons_mon(m)); sprintf('%1.2f öre/kWh',eng_tax(m)); sprintf('%1.2f öre/kWh',markup(m)); sprintf('%1.1f%%',cf.VAT*100); ""};
-	summa = {sprintf('%1.2f kr',eng_cost_mon(m)/100); sprintf('%1.2f kr',trans_cost_mon(m)/100); sprintf('%1.2f kr',eng_tax(m)*cons_mon(m)/100); sprintf('%1.2f kr',markup(m)*cons_mon(m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
+	pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(m)/cons_mon(m)); sprintf('%1.2f öre/kWh',trans_cost_mon(m)/cons_mon(m)); sprintf('%1.2f öre/kWh',cf.eng_tax(e_y_idx,m)); sprintf('%1.2f öre/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
+	summa = {sprintf('%1.2f kr',eng_cost_mon(m)/100); sprintf('%1.2f kr',trans_cost_mon(m)/100); sprintf('%1.2f kr',eng_tax(m)/100); sprintf('%1.2f kr',markup(m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
 	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
