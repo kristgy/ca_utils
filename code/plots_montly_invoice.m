@@ -6,6 +6,7 @@ run conf.m
 %sel_m = [1];
 sel_m = [10];
 %sel_m = [11];
+%sel_m = [11];
 %sel_y = [2];
 sel_y = [3];
 sel_u = [4];
@@ -38,8 +39,8 @@ tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
 
-%for u = 1:length(cons.users.ID)
-for u = sel_u
+for u = 1:length(cons.users.ID)
+%for u = sel_u
 	figure()
 	colororder([0 0 0; 1 0 0])
 
