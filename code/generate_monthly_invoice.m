@@ -22,7 +22,7 @@ yr = 2022;
 e_y_idx = find(cf.years==yr);
 %m = datetime('today').Month - 1;
 %m = 1;
-m = 10;
+m = 12;
 %m = 9;
 
 for u = 1:length(cons.users.ID)
