@@ -1,11 +1,4 @@
 function [consumption, transport, engtax]  = cost_transport_usr(users,yr,cons,cf)
-%clear all
-%close all
-%run conf.m
-%load([cf.tmp_data_dir cf.cons_file],'cons')
-%%users = [2 3];
-%users = [1];
-%yr = 2022; 
 
 c_y_idx = find(cons.years==yr);
 e_y_idx = find(cf.years==yr);

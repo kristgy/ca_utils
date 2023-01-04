@@ -2,6 +2,7 @@ clear all
 close all
 
 run conf.m
+e_y_idx = find(cf.years==cf.yr);
 
 papersize = [18 8];
 offs_x = -.9;
@@ -24,11 +25,11 @@ cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
 if cf.hourly_prices
 	mon_price = transpose(squeeze(price.day_of_month(p_y_idx,cf.m,:,:)));
 else
-	mon_price = cf.telge_avg(p_y_idx,cf.m)*ones(24,31);
+	mon_price = cf.telge_avg(e_y_idx,cf.m)*ones(24,31);
 end
-mon_trans = transpose(squeeze(cf.transf_price(p_y_idx,cf.m,weekdays,:)));
+mon_trans = transpose(squeeze(cf.transf_price(e_y_idx,cf.m,weekdays,:)));
 mon_trans(:,num_days_mon+1:end) = NaN;
-tax = cf.eng_tax(p_y_idx)*ones(24,31);
+tax = cf.eng_tax(e_y_idx)*ones(24,31);
 tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;

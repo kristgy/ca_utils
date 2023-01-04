@@ -2,6 +2,7 @@ clear all
 close all
 
 run conf.m
+e_y_idx = find(cf.years==cf.yr);
 
 invoice = false;
 %invoice = true;

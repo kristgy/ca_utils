@@ -1,11 +1,4 @@
 function [consumption, energy, markup]  = cost_eng_usr_hourly(users,yr,cons,price,cf)
-%clear all
-%close all
-%run conf.m
-%load([cf.tmp_data_dir cf.cons_file],'cons')
-%load([cf.tmp_data_dir cf.price_file],'price')
-%users = [2 3];
-%yr = 2020; 
 
 c_y_idx = find(cons.years==yr);
 p_y_idx = find(price.years==yr);
