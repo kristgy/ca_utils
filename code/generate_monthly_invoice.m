@@ -4,10 +4,11 @@ close all
 run conf.m
 e_y_idx = find(cf.years==cf.yr);
 
-invoice = false;
-%invoice = true;
+%invoice = false;
+invoice = true;
 %info_str = "Kommer fakureras med SBC avin i januari 2023.";
-info_str = "Kommer fakureras i januari 2023.";
+%info_str = "Kommer fakureras i januari 2023.";
+info_str = "";
 
 import mlreportgen.dom.*
 import mlreportgen.report.*
@@ -137,7 +138,7 @@ for u = 1:length(cons.users.ID)
 		imagesc(qr);
 		axis image;
 		axis off;
-		QR_kod = Paragraph("QR kod för betalning i app");
+		QR_kod = Paragraph("QR kod för betalning i bankapp");
 		QR_kod.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
 		add(rpt, QR_kod);
 		fig = mlreportgen.report.Figure('SnapshotFormat','pdf');
