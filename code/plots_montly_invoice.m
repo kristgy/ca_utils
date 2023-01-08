@@ -9,6 +9,8 @@ offs_x = -.9;
 offs_y = -.7;
 printfigs = 1;
 %printfigs = 0;
+%show_plots = true;
+show_plots = false;
 
 load([cf.tmp_data_dir cf.cons_file],'cons');
 c_y_idx = find(cons.years==cf.yr);
@@ -35,7 +37,11 @@ moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
 
 for u = 1:length(cons.users.ID)
-	figure()
+	if show_plots
+		figure()
+	else
+		figure('visible','off');
+	end
 	colororder([0 0 0; 1 0 0])
 
 	yyaxis left;
