@@ -9,16 +9,24 @@ e_y_idx = find(cf.years==cf.yr);
 
 %invoice = false;
 invoice = true;
+%show_QR = true;
+show_QR = false;
+show_rpt = true;
+%show_rpt = false;
 info_str = "Kommer fakureras i januari 2023.";
 %info_str = "";
-today = datetime('today');
 
 ocr = cf.ocr; % starting invoice number
+today = datetime('today');
+%sel_usr = 1:length(cons.users.ID)
+sel_usr = 5;
+
 
 load([cf.tmp_data_dir cf.cons_file],'cons')
 load([cf.tmp_data_dir cf.price_file],'price')
 
-for u = 1:length(cons.users.ID)
+%for u = 1:length(cons.users.ID)
+for u = sel_usr
 
 	d = Document([cf.rep_dir cons.users.ID{u}], 'pdf');
 	open(d);
@@ -45,11 +53,11 @@ for u = 1:length(cons.users.ID)
 
 	if invoice
 		heading = Heading(1,"Faktura")
-		heading.Style = {Color('Black'),HAlign('center'),Bold(true),FontSize('14pt'),OuterMargin("0cm","0cm","10mm","0cm")};
+		heading.Style = {Color('Black'),HAlign('center'),Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm","10mm","0cm")};
 		heading.FontFamilyName = 'Helvetica';
 		append(d,heading);
 		invTbl = FormalTable({'Hyrestagare',['Fakturadatum: ' datestr(today,cf.dtfmt)]}, ...
-		[{[cons.users.FirstName{u} ' ' cons.users.LastName{u}]; cons.users.Email{u}; ''; ''},{['Förfallodatum: ' datestr(today+days(cf.paytrms),cf.dtfmt)]; ['Fakturanummer: ' num2str(ocr)]; ['Betalning till bankgiro: ' cf.bankgiro];'Ange fakturanummer vid betalning'}]);
+		[{[cons.users.FirstName{u} ' ' cons.users.LastName{u}]; cf.usr_addres.(cons.users.ID{u}); cons.users.Email{u}; ''},{['Förfallodatum: ' datestr(today+days(cf.paytrms),cf.dtfmt)]; ['Fakturanummer: ' num2str(ocr)]; ['Betalning till bankgiro: ' cf.bankgiro];'Ange fakturanummer vid betalning'}]);
 		invTbl.TableEntriesInnerMargin = '1pt';
 		invTbl.Style = {OuterMargin("0cm","0cm","7mm","7mm")};
 		%invTbl.HAlign = 'center';
@@ -138,8 +146,11 @@ for u = 1:length(cons.users.ID)
 		to_pay = (1+cf.VAT)*tot_cost_ex_VAT;
 		ore = round((to_pay-floor(to_pay))*100);
 		qr = generate_qr_code(ocr,to_pay,cf.bankgiro);
-		%fQR = figure();
-		fQR = figure('visible','off');
+		if show_QR
+			fQR = figure();
+		else
+			fQR = figure('visible','off');
+		end
 		colormap(gray);
 		imagesc(qr);
 		axis image;
@@ -169,6 +180,8 @@ for u = 1:length(cons.users.ID)
 	end
 
 	close(d);
-	%rptview(d);
+	if show_rpt
+		rptview(d);
+	end
 
 end
