@@ -19,7 +19,7 @@ cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
 
 cf.yr = 2022;
-cf.m = 12;
+cf.m = 11;
 cf.years = [2020, 2021, 2022];
 %                  Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
 % our price from Telge [öre/kWh]
@@ -48,7 +48,7 @@ cf.price_data_file_str = 'data*.xlsx';
 cf.price_file = 'prices';
 cf.cons_file = 'consumption';
 
-cf.num_years = 3;
+cf.num_years = length(cf.years);
 cf.dtfmt = 'yyyy-mm-dd';
 
 cf.eng_tax = NaN*ones(cf.num_years,12);
@@ -59,6 +59,9 @@ cf.eng_tax(3,:) = 36.0;
 % use hourly price or average monthly price
 cf.hourly_prices = true;
 %cf.hourly_prices = false;
+
+% payment terms (number of days)
+cf.paytrms = 30;
 
 %cf.markup = 2.2; % [öre/kWh] % According to contract, ignoring Elcertificat
 cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
