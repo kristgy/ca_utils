@@ -11,19 +11,22 @@ e_y_idx = find(cf.years==cf.yr);
 invoice = true;
 %show_QR = true;
 show_QR = false;
-show_rpt = true;
-%show_rpt = false;
+%show_rpt = true;
+show_rpt = false;
 info_str = "Kommer fakureras i januari 2023.";
 %info_str = "";
+PageLeftMargin = "15mm";
 
 ocr = cf.ocr; % starting invoice number
 today = datetime('today');
-%sel_usr = 1:length(cons.users.ID)
-sel_usr = 5;
-
 
 load([cf.tmp_data_dir cf.cons_file],'cons')
 load([cf.tmp_data_dir cf.price_file],'price')
+
+sel_usr = 1:length(cons.users.ID);
+%sel_usr = 7;
+accum_kWh = 0;
+accum_cost = 0;
 
 %for u = 1:length(cons.users.ID)
 for u = sel_usr
@@ -37,7 +40,7 @@ for u = sel_usr
 	curLayout.PageSize = pageSizeObj;
 
 	pageMarginsObj = PageMargins();
-	pageMarginsObj.Top = "10mm";
+	pageMarginsObj.Top = "11mm";
 	pageMarginsObj.Bottom = "0mm";
 	pageMarginsObj.Left = "8mm";
 	pageMarginsObj.Right = "8mm";
@@ -46,13 +49,23 @@ for u = sel_usr
 	pageMarginsObj.Gutter = "0mm";
 	curLayout.PageMargins = pageMarginsObj;
 
+	HeaderStyle = {FontSize('12pt'),OuterMargin(PageLeftMargin,"0cm","0mm","0cm")};
 	curLayout.PageHeaders = PDFPageHeader();
-	append(curLayout.PageHeaders,cf.invoicer); 
-	append(curLayout.PageHeaders,cf.invoicer_street); 
-	append(curLayout.PageHeaders,cf.invoicer_town); 
+	txtInv = Text(cf.invoicer); 
+	txtInv.Style = HeaderStyle;
+	%append(curLayout.PageHeaders,cf.invoicer); 
+	append(curLayout.PageHeaders,txtInv); 
+	txtStr = Text(cf.invoicer_street); 
+	txtStr.Style = HeaderStyle;
+	%append(curLayout.PageHeaders,cf.invoicer_street); 
+	append(curLayout.PageHeaders,txtStr); 
+	txtTwn = Text(cf.invoicer_town); 
+	txtTwn.Style = HeaderStyle;
+	%append(curLayout.PageHeaders,cf.invoicer_town); 
+	append(curLayout.PageHeaders,txtTwn); 
 
 	if invoice
-		heading = Heading(1,"Faktura")
+		heading = Heading(1,"Faktura");
 		heading.Style = {Color('Black'),HAlign('center'),Bold(true),FontSize('16pt'),OuterMargin("0cm","0cm","10mm","0cm")};
 		heading.FontFamilyName = 'Helvetica';
 		append(d,heading);
@@ -63,7 +76,7 @@ for u = sel_usr
 		%invTbl.HAlign = 'center';
 		invTbl.Border = 'None';
 		invTbl.Header.Style = {Bold(true)};
-		invTbl.OuterLeftMargin = "20mm";
+		invTbl.OuterLeftMargin = PageLeftMargin;
 		invTbl.ColSep = "Solid";
 		invTbl.ColSepColor = "White";
 		invTbl.ColSepWidth = "35mm";
@@ -93,12 +106,12 @@ for u = sel_usr
                 WhiteSpace("preserve")};
 	headerLabels = ["Specificering", "Period", "Kvantitet", "Pris", "Summa"];
 	if cf.hourly_prices
-		spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"}
+		spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"};
 	else
-		spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Moms"; "Summa"}
+		spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Moms"; "Summa"};
 	end
 
-	[cons_mon, eng_cost]  = cost_eng_usr_monthly(u,cf.yr,cons,cf)
+	[cons_mon, eng_cost]  = cost_eng_usr_monthly(u,cf.yr,cons,cf);
 	[cons_day_mon, eng_cost_mon, markup]  = cost_eng_usr_hourly(u,cf.yr,cons,price,cf);
 	if ~cf.hourly_prices
 		eng_cost_mon = eng_cost;
@@ -109,17 +122,19 @@ for u = sel_usr
 	per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 	if cf.hourly_prices
 		tot_cost_ex_VAT = (eng_cost_mon(cf.m)+eng_tax(cf.m)+markup(cf.m)+trans_cost_mon(cf.m))/100;
-		period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}}
+		period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}};
 		kvant = {sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); ""; ""};
 		pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',trans_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',cf.eng_tax(e_y_idx,cf.m)); sprintf('%1.2f öre/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
 		summa = {sprintf('%1.2f kr',eng_cost_mon(cf.m)/100); sprintf('%1.2f kr',trans_cost_mon(cf.m)/100); sprintf('%1.2f kr',eng_tax(cf.m)/100); sprintf('%1.2f kr',markup(cf.m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
 	else
 		tot_cost_ex_VAT = (eng_cost_mon(cf.m)+eng_tax(cf.m)+trans_cost_mon(cf.m))/100;
-		period = {per{1}; per{1}; per{1}; ""; per{1}}
+		period = {per{1}; per{1}; per{1}; ""; per{1}};
 		kvant = {sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); ""; ""};
 		pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',trans_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',cf.eng_tax(e_y_idx,cf.m)); sprintf('%1.1f%%',cf.VAT*100); ""};
 		summa = {sprintf('%1.2f kr',eng_cost_mon(cf.m)/100); sprintf('%1.2f kr',trans_cost_mon(cf.m)/100); sprintf('%1.2f kr',eng_tax(cf.m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',(1+cf.VAT)*tot_cost_ex_VAT)};
 	end
+	accum_kWh = accum_kWh + cons_mon(cf.m);
+	accum_cost = accum_cost + (1+cf.VAT)*tot_cost_ex_VAT;
 	tableData = [spec(1:end-1), period(1:end-1), kvant(1:end-1), pris(1:end-1), summa(1:end-1)]
 	totalen = [' ', ' ', ' ', spec(end), summa(end)];
 
@@ -183,5 +198,6 @@ for u = sel_usr
 	if show_rpt
 		rptview(d);
 	end
-
 end
+display(sprintf('Total invoiced consumption %1.2f kWh',accum_kWh))
+display(sprintf('Total invoiced cost %1.2f kr',accum_cost))
