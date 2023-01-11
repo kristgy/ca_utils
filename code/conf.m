@@ -12,6 +12,7 @@ cf.cons_data_dir = '../../../afs_home/personal/housing/ref_data/';
 cf.fig_dir = [cf.cons_data_dir 'figures/'];
 cf.rep_dir = [cf.cons_data_dir 'reports/'];
 cf.tmp_data_dir = cf.cons_data_dir;
+cf.rep_sum_file = 'invoice_summary.xlsx';
 
 run([cf.cons_data_dir 'private_conf.m']);
 
