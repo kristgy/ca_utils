@@ -25,6 +25,11 @@ hours = 1:24*31;
 days = 1:31;
 start_weekday_mon = weekday(sprintf('%d-%d-01',price.years(p_y_idx),cf.m));
 weekdays = mod(start_weekday_mon+days-2,7) + 1;
+mondays = days(weekdays==2);
+weeks_of_year = weeknum(datenum(cf.yr,cf.m,mondays(1)),2,1)+[0:length(mondays)-1];
+d = repmat(weekdays,24,1);
+week_start_hours = hours((d(:)'==2)&~mod(hours-1,24));
+week_str = mat2cell(reshape(sprintf('w%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
 
 cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
 if cf.hourly_prices
@@ -54,7 +59,6 @@ for u = sel_usr
 	ar(2).FaceColor = .65*[1 1 1];
 	ar(3).FaceColor = .75*[1 1 1];
 	ar(4).FaceColor = .85*[1 1 1];
-	hold on 
 %	h = plot(hours([1,end]),mean(mon_price,'all','omitnan')*[1 1]/100,'k-.');
 	%l = legend({'Energiskatt','Elöverföring','Elhandel','Moms',sprintf('Snitt elh. över tid %.2f öre/kWh',mean(mon_price,'all','omitnan'))}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
 	fixed = 'Energiskatt';
@@ -70,8 +74,12 @@ for u = sel_usr
 	usr_hour = transpose(squeeze(cons_hour(u,c_y_idx,cf.m,:,:)));
 	b = bar(hours,usr_hour(:),1);
 	b.FaceAlpha = .5;
+	hold on 
+	ylims = get(gca,'YLim');
+	plot([week_start_hours;week_start_hours],ylims,'k-')
+	text(week_start_hours+5,0.93*ylims(2)*ones(1,length(week_start_hours)),week_str);
 	ylabel('Laddning per timme [kWh]')
-	set(gca,'XLim',[1 24*num_days_mon]);
+	set(gca,'XLim',[1 24*num_days_mon],'YLim',ylims);
 
 	xlabel('Timme i månaden')
 	title(sprintf('Sammanställning för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));

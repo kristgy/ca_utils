@@ -58,8 +58,8 @@ cf.eng_tax(2,:) = 35.6;
 cf.eng_tax(3,:) = 36.0;
 
 % use hourly price or average monthly price
-%cf.hourly_prices = true;
-cf.hourly_prices = false;
+cf.hourly_prices = true;
+%cf.hourly_prices = false;
 
 % payment terms (number of days)
 cf.paytrms = 30;
