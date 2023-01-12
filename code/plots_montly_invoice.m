@@ -7,8 +7,8 @@ e_y_idx = find(cf.years==cf.yr);
 papersize = [18 8];
 offs_x = -.9;
 offs_y = -.7;
-printfigs = 1;
-%printfigs = 0;
+printfigs = true;
+%printfigs = false;
 %show_plots = true;
 show_plots = false;
 
@@ -35,8 +35,11 @@ tax = cf.eng_tax(e_y_idx)*ones(24,31);
 tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
+sel_usr = 1:length(cons.users.ID);
+%sel_usr = 7;
 
-for u = 1:length(cons.users.ID)
+%for u = 1:length(cons.users.ID)
+for u = sel_usr
 	if show_plots
 		figure()
 	else
@@ -53,7 +56,11 @@ for u = 1:length(cons.users.ID)
 	hold on 
 %	h = plot(hours([1,end]),mean(mon_price,'all','omitnan')*[1 1]/100,'k-.');
 	%l = legend({'Energiskatt','Elöverföring','Elhandel','Moms',sprintf('Snitt elh. över tid %.2f öre/kWh',mean(mon_price,'all','omitnan'))}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
-	l = legend({'Energiskatt+påslag','Elöverföring',sprintf('Elhandel (snitt över tid %.2f öre/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
+	fixed = 'Energiskatt';
+	if cf.hourly_prices
+		fixed = [fixed '+påslag'];
+	end
+	l = legend({fixed,'Elöverföring',sprintf('Elhandel (snitt över tid %.2f öre/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
 	l.AutoUpdate = 'off';
 	ylabel('Pris [kr/kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
