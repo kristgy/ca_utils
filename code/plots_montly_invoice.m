@@ -29,7 +29,7 @@ mondays = days(weekdays==2);
 weeks_of_year = weeknum(datenum(cf.yr,cf.m,mondays(1)),2,1)+[0:length(mondays)-1];
 d = repmat(weekdays,24,1);
 week_start_hours = hours((d(:)'==2)&~mod(hours-1,24));
-week_str = mat2cell(reshape(sprintf('w%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
+week_str = mat2cell(reshape(sprintf('v%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
 
 cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
 if cf.hourly_prices
