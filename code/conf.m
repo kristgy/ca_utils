@@ -20,7 +20,7 @@ cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
 
 cf.yr = 2022;
-cf.m = 10;
+cf.m = 11;
 cf.years = [2020, 2021, 2022];
 %                  Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
 % our price from Telge [öre/kWh]
