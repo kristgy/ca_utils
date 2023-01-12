@@ -17,6 +17,9 @@ c_y_idx = find(cons.years==cf.yr);
 load([cf.tmp_data_dir cf.price_file],'price')
 p_y_idx = find(price.years==cf.yr);
 
+sel_usr = 1:length(cons.users.ID);
+%sel_usr = 7;
+
 num_days_mon = datetime(price.years(p_y_idx),cf.m+1,0).Day;
 hours = 1:24*31;
 days = 1:31;
@@ -35,8 +38,6 @@ tax = cf.eng_tax(e_y_idx)*ones(24,31);
 tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
-sel_usr = 1:length(cons.users.ID);
-%sel_usr = 7;
 
 %for u = 1:length(cons.users.ID)
 for u = sel_usr
@@ -67,7 +68,7 @@ for u = sel_usr
 
 	yyaxis right;
 	usr_hour = transpose(squeeze(cons_hour(u,c_y_idx,cf.m,:,:)));
-	b = bar(hours,usr_hour(:));
+	b = bar(hours,usr_hour(:),1);
 	b.FaceAlpha = .5;
 	ylabel('Laddning per timme [kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
