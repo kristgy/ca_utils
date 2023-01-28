@@ -26,7 +26,7 @@ cf.years = [2020, 2021, 2022];
 % our price from Telge [öre/kWh]
 cf.telge_avg =   [ NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     31.49  35.15  41.74;  % 2020
                     58.73  65.33  45.93  41.68  51.96  48.69  67.82  76.31 102.37  78.37 102.55 202.39;  % 2021
-                   118.67  89.68 144.61  98.18 114.25 142.68 101.60 253.66 251.56 101.79 163.56    NaN]; % 2022
+                   118.67  89.68 144.61  98.18 114.25 142.68 101.60 253.66 251.56 101.79 163.56 302.18]; % 2022
 % avg spot prices on Nordpool [öre/kWh]
 % from https://www.vattenfall.se/elavtal/elpriser/timpris-pa-elborsen/
 cf.vattenf_avg = [  25.02  19.46  14.97   9.80  13.54  24.91   9.26  34.71  34.85  23.02  24.13  31.58;  % 2020
