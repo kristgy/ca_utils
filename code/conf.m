@@ -65,8 +65,8 @@ cf.hourly_prices = true;
 cf.paytrms = 30;
 
 %cf.markup = 2.2; % [öre/kWh] % According to contract, ignoring Elcertificat
-cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
-%cf.markup = 10; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
+%cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
+cf.markup = 10; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
 %cf.markup = 0; % [öre/kWh] % When running monthly average price
 
 cf.VAT = 0.25;
