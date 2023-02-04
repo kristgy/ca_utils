@@ -54,7 +54,13 @@ for u = sel_usr
 	colororder([0 0 0; 1 0 0])
 
 	yyaxis left;
-	ar = area(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:)+cf.markup, moms(:)]/100,'LineStyle','none');
+%	ar = area(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:)+cf.markup, moms(:)]/100,'LineStyle','none');
+%	% FIXME change this to a continuous bar plot like the charging data below
+%	ar(1).FaceColor = .55*[1 1 1];
+%	ar(2).FaceColor = .65*[1 1 1];
+%	ar(3).FaceColor = .75*[1 1 1];
+%	ar(4).FaceColor = .85*[1 1 1];
+	ar = bar(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:)+cf.markup, moms(:)]/100,1,'stacked');
 	ar(1).FaceColor = .55*[1 1 1];
 	ar(2).FaceColor = .65*[1 1 1];
 	ar(3).FaceColor = .75*[1 1 1];
