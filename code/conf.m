@@ -19,8 +19,8 @@ run([cf.cons_data_dir 'private_conf.m']);
 cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
 
-cf.yr = 2023;
-cf.m = 1;
+cf.yr = 2022;
+cf.m = 12;
 cf.years = [2020, 2021, 2022, 2023];
 %                  Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
 % our price from Telge [öre/kWh]

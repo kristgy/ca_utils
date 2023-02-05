@@ -44,7 +44,6 @@ tax(:,num_days_mon+1:end) = NaN;
 moms = cf.VAT*(tax + mon_trans + mon_price + cf.markup);
 moms(:,num_days_mon+1:end) = NaN;
 
-%for u = 1:length(cons.users.ID)
 for u = sel_usr
 	if show_plots
 		figure()
@@ -54,19 +53,11 @@ for u = sel_usr
 	colororder([0 0 0; 1 0 0])
 
 	yyaxis left;
-%	ar = area(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:)+cf.markup, moms(:)]/100,'LineStyle','none');
-%	% FIXME change this to a continuous bar plot like the charging data below
-%	ar(1).FaceColor = .55*[1 1 1];
-%	ar(2).FaceColor = .65*[1 1 1];
-%	ar(3).FaceColor = .75*[1 1 1];
-%	ar(4).FaceColor = .85*[1 1 1];
 	ar = bar(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:)+cf.markup, moms(:)]/100,1,'stacked');
 	ar(1).FaceColor = .55*[1 1 1];
 	ar(2).FaceColor = .65*[1 1 1];
 	ar(3).FaceColor = .75*[1 1 1];
 	ar(4).FaceColor = .85*[1 1 1];
-%	h = plot(hours([1,end]),mean(mon_price,'all','omitnan')*[1 1]/100,'k-.');
-	%l = legend({'Energiskatt','Elöverföring','Elhandel','Moms',sprintf('Snitt elh. över tid %.2f öre/kWh',mean(mon_price,'all','omitnan'))}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
 	hold on 
 	ylims = get(gca,'YLim');
 	plot([week_start_hours;week_start_hours],ylims,'k-')
@@ -90,7 +81,6 @@ for u = sel_usr
 
 	xlabel('Timme i månaden')
 	title(sprintf('Sammanställning för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
-	%l.Position(2) = l.Position(2) + .25;
 	if printfigs
 	    set(gcf,'paperunits','centimeters','papersize',papersize,'paperposition',[offs_x,offs_y,papersize(1)-offs_x,papersize(2)-offs_y])
 		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpng')
