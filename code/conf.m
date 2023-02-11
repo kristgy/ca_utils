@@ -23,12 +23,12 @@ cf.yr = 2022;
 cf.m = 12;
 cf.years = [2020, 2021, 2022, 2023];
 %                  Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
-% our price from Telge [öre/kWh]
+% our price from Telge [ore/kWh]
 cf.telge_avg =   [ NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN     31.49  35.15  41.74; % 2020
                     58.73  65.33  45.93  41.68  51.96  48.69  67.82  76.31 102.37  78.37 102.55 202.39; % 2021
                    118.67  89.68 144.61  98.18 114.25 142.68 101.60 253.66 251.56 101.79 163.56 302.18; % 2022
                     92.58 NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN    NaN];   % 2023
-% avg spot prices on Nordpool [öre/kWh]
+% avg spot prices on Nordpool [ore/kWh]
 % from https://www.vattenfall.se/elavtal/elpriser/timpris-pa-elborsen/
 cf.vattenf_avg = [  25.02  19.46  14.97   9.80  13.54  24.91   9.26  34.71  34.85  23.02  24.13  31.58;  % 2020
                     49.05  53.62  36.78  33.68  43.50  40.30  59.05  67.11  91.84  64.75  83.52 180.74;  % 2021
@@ -55,7 +55,7 @@ cf.num_years = length(cf.years);
 cf.dtfmt = 'yyyy-mm-dd';
 
 cf.eng_tax = NaN*ones(cf.num_years,12);
-cf.eng_tax(1,:) = 35.3; % [öre/kWh]
+cf.eng_tax(1,:) = 35.3; % [ore/kWh]
 cf.eng_tax(2,:) = 35.6;
 cf.eng_tax(3,:) = 36.0;
 cf.eng_tax(4,:) = 39.2;
@@ -67,10 +67,10 @@ cf.hourly_prices = true;
 % payment terms (number of days)
 cf.paytrms = 30;
 
-%cf.markup = 2.2; % [öre/kWh] % According to contract, ignoring Elcertificat
-%cf.markup = 6.6; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
-cf.markup = 10; % [öre/kWh] % Including estimate of elcertificat, based on fit of historical data
-%cf.markup = 0; % [öre/kWh] % When running monthly average price
+%cf.markup = 2.2; % [ore/kWh] % According to contract, ignoring Elcertificat
+%cf.markup = 6.6; % [ore/kWh] % Including estimate of elcertificat, based on fit of historical data
+cf.markup = 10; % [ore/kWh] % Including estimate of elcertificat, based on fit of historical data
+%cf.markup = 0; % [ore/kWh] % When running monthly average price
 
 cf.VAT = 0.25;
 
