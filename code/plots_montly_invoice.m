@@ -1,7 +1,7 @@
 clear all
 close all
 
-run conf.m
+run conf.m;
 e_y_idx = find(cf.years==cf.yr);
 
 papersize = [18 8];
@@ -65,9 +65,9 @@ for u = sel_usr
 	set(gca,'YLim',ylims);
 	fixed = 'Energiskatt';
 	if cf.hourly_prices
-		fixed = [fixed '+påslag'];
+		fixed = [fixed '+pÃ¥slag'];
 	end
-	l = legend({fixed,'Elöverföring',sprintf('Elhandel (snitt över tid %.2f öre/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
+	l = legend({fixed,'ElÃ¶verfÃ¶ring',sprintf('Elhandel (snitt Ã¶ver tid %.2f Ã¶re/kWh)',mean(mon_price,'all','omitnan')),'Moms'}, 'Box','off','Location','SouthOutside','Orientation','horizontal');
 	l.AutoUpdate = 'off';
 	ylabel('Pris [kr/kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
@@ -79,8 +79,8 @@ for u = sel_usr
 	ylabel('Laddning per timme [kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
 
-	xlabel('Timme i månaden')
-	title(sprintf('Sammanställning för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
+	xlabel('Timme i mÃ¥naden')
+	title(sprintf('SammanstÃ¤llning fÃ¶r %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
 	if printfigs
 	    set(gcf,'paperunits','centimeters','papersize',papersize,'paperposition',[offs_x,offs_y,papersize(1)-offs_x,papersize(2)-offs_y])
 		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpng')

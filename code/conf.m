@@ -19,8 +19,8 @@ run([cf.cons_data_dir 'private_conf.m']);
 cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
 
-cf.yr = 2022;
-cf.m = 12;
+cf.yr = 2023;
+cf.m = 1;
 cf.years = [2020, 2021, 2022, 2023];
 %                  Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
 % our price from Telge [ore/kWh]
@@ -45,7 +45,8 @@ cf.vattenf_avg = [  25.02  19.46  14.97   9.80  13.54  24.91   9.26  34.71  34.8
 %cf.data_file = 'All sessions within period for all users_2020-06-01--2021-03-16.csv';
 %cf.data_file = 'All sessions within period for all users_2020-10-01--2022-10-31.csv';
 %cf.data_file = 'All sessions within period for all users_2020-10-01--2022-12-31.csv';
-cf.data_file = 'All sessions within period for all users_2020-10-01--2023-02-01.csv';
+%cf.data_file = 'All sessions within period for all users_2020-10-01--2023-02-01.csv';
+cf.data_file = 'All sessions within period for all users_2020-10-01--2023-03-01.csv';
 
 cf.price_data_file_str = 'data*.xlsx';
 cf.price_file = 'prices';
@@ -81,5 +82,7 @@ cf.transf_price(2,4:12,:) = 14.4;
 cf.transf_price(2,11:12,2:6,7:22) = 48.0;
 cf.transf_price(3,:) = 14.4;
 cf.transf_price(3,[1:3 11:12],2:6,7:22) = 48.0;
-cf.transf_price(4,:) = 14.4;
-cf.transf_price(4,[1:3 11:12],2:6,7:22) = 48.0;
+
+cf.transf_price(4,:) = cf.transf_price(3,:)
+%cf.transf_price(4,:) = 14.4;
+%cf.transf_price(4,[1:3 11:12],2:6,7:22) = 48.0;
