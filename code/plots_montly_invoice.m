@@ -30,6 +30,7 @@ weeks_of_year = weeknum(datenum(cf.yr,cf.m,mondays(1))+[0:7:7*(length(mondays)-1
 d = repmat(weekdays,24,1);
 week_start_hours = hours((d(:)'==2)&~mod(hours-1,24));
 week_str = mat2cell(reshape(sprintf('v%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
+day_str = string(1:num_days_mon);
 
 cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
 if cf.hourly_prices
@@ -71,6 +72,8 @@ for u = sel_usr
 	l.AutoUpdate = 'off';
 	ylabel('Pris [kr/kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
+	set(gca,'XTick',[1:24:24*num_days_mon]);
+	set(gca,'XTickLabel',day_str)
 
 	yyaxis right;
 	usr_hour = transpose(squeeze(cons_hour(u,c_y_idx,cf.m,:,:)));
@@ -79,8 +82,8 @@ for u = sel_usr
 	ylabel('Laddning per timme [kWh]')
 	set(gca,'XLim',[1 24*num_days_mon]);
 
-	xlabel('Timme i månaden')
-	title(sprintf('Sammanställning för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
+	xlabel('Dag i månaden')
+	title(sprintf('Laddning och pris per timme för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
 	if printfigs
 	    set(gcf,'paperunits','centimeters','papersize',papersize,'paperposition',[offs_x,offs_y,papersize(1)-offs_x,papersize(2)-offs_y])
 		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpng')
