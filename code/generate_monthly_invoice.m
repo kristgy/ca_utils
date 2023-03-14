@@ -6,14 +6,17 @@ import mlreportgen.dom.*
 
 run conf.m
 e_y_idx = find(cf.years==cf.yr);
+dtv = [cf.yr cf.m 1 0 0 0];
+dte = [cf.yr cf.m+1 0 0 0 0];
+per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 
-%invoice = false;
-invoice = true;
+invoice = false;
+%invoice = true;
 %show_QR = true;
 show_QR = false;
 %show_rpt = true;
 show_rpt = false;
-info_str = "Kommer fakureras i januari 2023.";
+info_str = "Kommer fakureras via SBS avin i början av april 2023.";
 %info_str = "";
 PageLeftMargin = "15mm";
 
@@ -99,7 +102,15 @@ for u = sel_usr
 			invTbl.ColSepWidth = "35mm";
 			append(d,invTbl);
 		else
-			heading = Heading(1,['Månadens elförbrukning för ' cons.users.FirstName{u}]);
+			usr = usr + 1;
+			rep_sum{usr,1} = cf.SBC_objektnr.(cons.users.ID{u});
+			rep_sum{usr,2} = cf.SBC_konto;
+			rep_sum{usr,3} = [cf.SBC_rubrik ' ' cf.month_l_se(cf.m,:)];
+			rep_sum{usr,5} = '';
+			rep_sum{usr,6} = '';
+			rep_sum{usr,7} = datestr(dtv,cf.dtfmt);
+			rep_sum{usr,8} = datestr(dte,cf.dtfmt);
+			heading = Heading(1,['Sammanfattning av månadens elförbrukning för ' cons.users.FirstName{u}]);
 			heading.Style = {Color('Black'),HAlign('center'),Bold(true),FontSize('14pt'),OuterMargin("0cm","0cm","1cm","0cm")};
 			heading.FontFamilyName = 'Helvetica';
 			append(d,heading);
@@ -128,9 +139,6 @@ for u = sel_usr
 			spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Moms"; "Summa"};
 		end
 
-		dtv = [cf.yr cf.m 1 0 0 0];
-		dte = [cf.yr cf.m+1 0 0 0 0];
-		per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 		if cf.hourly_prices
 			tot_cost_ex_VAT = (eng_cost_mon(cf.m)+eng_tax(cf.m)+markup(cf.m)+trans_cost_mon(cf.m))/100;
 			to_pay = round((1+cf.VAT)*tot_cost_ex_VAT,2);
@@ -202,6 +210,7 @@ for u = sel_usr
 			curLayout.PageFooters = PDFPageFooter();
 			append(curLayout.PageFooters,p); 
 		else
+			rep_sum{usr,4} = round(tot_cost_ex_VAT,2);
 			info = Paragraph(info_str);
 			info.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
 			append(d, info);
