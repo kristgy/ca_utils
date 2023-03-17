@@ -13,6 +13,7 @@ cf.fig_dir = [cf.cons_data_dir 'figures/'];
 cf.rep_dir = [cf.cons_data_dir 'reports/'];
 cf.tmp_data_dir = cf.cons_data_dir;
 cf.rep_sum_file = 'invoice_summary.xlsx';
+cf.send_list_file = 'send_list';
 
 run([cf.cons_data_dir 'private_conf.m']);
 

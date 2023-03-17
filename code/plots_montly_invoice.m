@@ -83,7 +83,7 @@ for u = sel_usr
 	set(gca,'XLim',[1 24*num_days_mon]);
 
 	xlabel('Dag i månaden')
-	title(sprintf('Laddning och pris per timme för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
+	title(sprintf('Pris och laddning per timme för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
 	if printfigs
 	    set(gcf,'paperunits','centimeters','papersize',papersize,'paperposition',[offs_x,offs_y,papersize(1)-offs_x,papersize(2)-offs_y])
 		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpng')

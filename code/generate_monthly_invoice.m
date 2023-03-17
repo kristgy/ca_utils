@@ -16,7 +16,7 @@ invoice = false;
 show_QR = false;
 %show_rpt = true;
 show_rpt = false;
-info_str = "Kommer fakureras via SBS avin i början av april 2023.";
+info_str = "Kommer fakureras via SBCs avi i början av april 2023.";
 %info_str = "";
 PageLeftMargin = "15mm";
 
@@ -31,9 +31,9 @@ sel_usr = 1:length(cons.users.ID);
 accum_kWh = 0;
 accum_cost = 0;
 rep_sum = {};
+send_list = {};
 usr = 0;
 
-%for u = 1:length(cons.users.ID)
 for u = sel_usr
 
 	[cons_mon, eng_cost]  = cost_eng_usr_monthly(u,cf.yr,cons,cf);
@@ -44,6 +44,7 @@ for u = sel_usr
 	[cons_day_week, trans_cost_mon, eng_tax]  = cost_transport_usr(u,cf.yr,cons,cf);
 
 	if cons_mon(cf.m) > 0
+		send_list{end+1} = cons.users.ID{u};
 		d = Document([cf.rep_dir cons.users.ID{u}], 'pdf');
 		open(d);
 
@@ -227,3 +228,4 @@ display(sprintf('Total invoiced cost %1.2f kr',accum_cost))
 if usr > 0
 	writecell(rep_sum,[cf.rep_dir cf.rep_sum_file],'WriteMode','replacefile');
 end
+save([cf.rep_dir cf.send_list_file],'send_list');

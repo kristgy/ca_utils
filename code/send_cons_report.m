@@ -25,12 +25,14 @@ end
 min_pause = .3;
 max_pause = 1.5;
 
-pauses = min_pause + (max_pause-min_pause).*rand(length(cf.send_list),1)
+load([cf.rep_dir cf.send_list_file],'send_list')
 
-for user_nr = 1:length(cf.send_list)
-	disp(cons.users.Email{ID_lut.(cf.send_list{user_nr})})
+pauses = min_pause + (max_pause-min_pause).*rand(length(send_list),1)
+
+for user_nr = 1:length(send_list)
+	disp(cons.users.Email{ID_lut.(send_list{user_nr})})
 	% Send the email
-	%sendmail(cons.users.Email{ID_lut.(cf.send_list{user_nr})},cf.email_subject,cf.email_body,{[cf.rep_dir cf.send_list{user_nr} '.pdf'], [cf.rep_dir 'filename.pdf']})
-	sendmail(cons.users.Email{ID_lut.(cf.send_list{user_nr})},cf.email_subject,cf.email_body,[cf.rep_dir cf.send_list{user_nr} '.pdf'])
+	%sendmail(cons.users.Email{ID_lut.(send_list{user_nr})},cf.email_subject,cf.email_body,{[cf.rep_dir send_list{user_nr} '.pdf'], [cf.rep_dir 'filename.pdf']})
+	sendmail(cons.users.Email{ID_lut.(send_list{user_nr})},cf.email_subject,cf.email_body,[cf.rep_dir send_list{user_nr} '.pdf'])
 	pause(pauses(user_nr))
 end
