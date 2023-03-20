@@ -10,17 +10,15 @@ dtv = [cf.yr cf.m 1 0 0 0];
 dte = [cf.yr cf.m+1 0 0 0 0];
 per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 
-invoice = false;
-%invoice = true;
 %show_QR = true;
 show_QR = false;
 %show_rpt = true;
 show_rpt = false;
-info_str = "Kommer fakureras via SBCs avi i början av april 2023.";
+info_str = "Kommer fakureras via SBCs avi i bÃ¶rjan av april 2023.";
 %info_str = "";
 PageLeftMargin = "15mm";
 
-ocr = cf.ocr; % starting invoice number
+ocr = cf.ocr; % starting cf.invoice number
 today = datetime('today');
 
 load([cf.tmp_data_dir cf.cons_file],'cons')
@@ -78,7 +76,7 @@ for u = sel_usr
 		%append(curLayout.PageHeaders,cf.invoicer_town); 
 		append(curLayout.PageHeaders,txtTwn); 
 
-		if invoice
+		if cf.invoice
 			usr = usr + 1;
 			rep_sum{usr,1} = ocr; 
 			rep_sum{usr,2} = [cons.users.FirstName{u} ' ' cons.users.LastName{u}];
@@ -91,7 +89,7 @@ for u = sel_usr
 			heading.FontFamilyName = 'Helvetica';
 			append(d,heading);
 			invTbl = FormalTable({'Hyrestagare',['Fakturadatum: ' datestr(today,cf.dtfmt)]}, ...
-			[{[cons.users.FirstName{u} ' ' cons.users.LastName{u}]; cf.usr_addres.(cons.users.ID{u}); cons.users.Email{u}; ''},{['Förfallodatum: ' datestr(today+days(cf.paytrms),cf.dtfmt)]; ['Fakturanummer: ' num2str(ocr)]; ['Betalning till bankgiro: ' cf.bankgiro];'Ange fakturanummer vid betalning'}]);
+			[{[cons.users.FirstName{u} ' ' cons.users.LastName{u}]; cf.usr_addres.(cons.users.ID{u}); cons.users.Email{u}; ''},{['FÃ¶rfallodatum: ' datestr(today+days(cf.paytrms),cf.dtfmt)]; ['Fakturanummer: ' num2str(ocr)]; ['Betalning till bankgiro: ' cf.bankgiro];'Ange fakturanummer vid betalning'}]);
 			invTbl.TableEntriesInnerMargin = '1pt';
 			invTbl.Style = {OuterMargin("0cm","0cm","7mm","7mm")};
 			%invTbl.HAlign = 'center';
@@ -111,7 +109,7 @@ for u = sel_usr
 			rep_sum{usr,6} = '';
 			rep_sum{usr,7} = datestr(dtv,cf.dtfmt);
 			rep_sum{usr,8} = datestr(dte,cf.dtfmt);
-			heading = Heading(1,['Sammanfattning av månadens elförbrukning för ' cons.users.FirstName{u}]);
+			heading = Heading(1,['Sammanfattning av mÃ¥nadens elfÃ¶rbrukning fÃ¶r ' cons.users.FirstName{u}]);
 			heading.Style = {Color('Black'),HAlign('center'),Bold(true),FontSize('14pt'),OuterMargin("0cm","0cm","1cm","0cm")};
 			heading.FontFamilyName = 'Helvetica';
 			append(d,heading);
@@ -135,9 +133,9 @@ for u = sel_usr
 			WhiteSpace("preserve")};
 		headerLabels = ["Specificering", "Period", "Kvantitet", "Pris", "Summa"];
 		if cf.hourly_prices
-			spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Påslag"; "Moms"; "Summa"};
+			spec = {"Elhandel";"ElÃ¶verfÃ¶ring "; "Energiskatt"; "PÃ¥slag"; "Moms"; "Summa"};
 		else
-			spec = {"Elhandel";"Elöverföring "; "Energiskatt"; "Moms"; "Summa"};
+			spec = {"Elhandel";"ElÃ¶verfÃ¶ring "; "Energiskatt"; "Moms"; "Summa"};
 		end
 
 		if cf.hourly_prices
@@ -145,14 +143,14 @@ for u = sel_usr
 			to_pay = round((1+cf.VAT)*tot_cost_ex_VAT,2);
 			period = {per{1}; per{1}; per{1}; per{1}; ""; per{1}};
 			kvant = {sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); ""; ""};
-			pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',trans_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',cf.eng_tax(e_y_idx,cf.m)); sprintf('%1.2f öre/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
+			pris = {sprintf('%1.2f Ã¶re/kWh',eng_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f Ã¶re/kWh',trans_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f Ã¶re/kWh',cf.eng_tax(e_y_idx,cf.m)); sprintf('%1.2f Ã¶re/kWh',cf.markup); sprintf('%1.1f%%',cf.VAT*100); ""};
 			summa = {sprintf('%1.2f kr',eng_cost_mon(cf.m)/100); sprintf('%1.2f kr',trans_cost_mon(cf.m)/100); sprintf('%1.2f kr',eng_tax(cf.m)/100); sprintf('%1.2f kr',markup(cf.m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',to_pay)};
 		else
 			tot_cost_ex_VAT = (eng_cost_mon(cf.m)+eng_tax(cf.m)+trans_cost_mon(cf.m))/100;
 			to_pay = round((1+cf.VAT)*tot_cost_ex_VAT,2);
 			period = {per{1}; per{1}; per{1}; ""; per{1}};
 			kvant = {sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); sprintf('%1.1f kWh',cons_mon(cf.m)); ""; ""};
-			pris = {sprintf('%1.2f öre/kWh',eng_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',trans_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f öre/kWh',cf.eng_tax(e_y_idx,cf.m)); sprintf('%1.1f%%',cf.VAT*100); ""};
+			pris = {sprintf('%1.2f Ã¶re/kWh',eng_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f Ã¶re/kWh',trans_cost_mon(cf.m)/cons_mon(cf.m)); sprintf('%1.2f Ã¶re/kWh',cf.eng_tax(e_y_idx,cf.m)); sprintf('%1.1f%%',cf.VAT*100); ""};
 			summa = {sprintf('%1.2f kr',eng_cost_mon(cf.m)/100); sprintf('%1.2f kr',trans_cost_mon(cf.m)/100); sprintf('%1.2f kr',eng_tax(cf.m)/100); sprintf('%1.2f kr',cf.VAT*tot_cost_ex_VAT); sprintf('%1.2f kr',to_pay)};
 		end
 		accum_kWh = accum_kWh + cons_mon(cf.m);
@@ -179,7 +177,7 @@ for u = sel_usr
 
 		append(d, cellTbl);
 
-		if invoice
+		if cf.invoice
 			rep_sum{usr,7} = to_pay;
 			ore = round((to_pay-floor(to_pay))*100);
 			qr = generate_qr_code(ocr,to_pay,cf.bankgiro);
@@ -193,7 +191,7 @@ for u = sel_usr
 			axis image;
 			axis off;
 			saveas(gcf, [cf.fig_dir 'QRPlot_img.png']);
-			QR_kod = Paragraph("QR kod för betalning i bankapp");
+			QR_kod = Paragraph("QR kod fÃ¶r betalning i bankapp");
 			QR_kod.Style = {HAlign('center'),Bold(true),FontSize('12pt'),OuterMargin("0cm","0cm","1cm","0cm")};
 			append(d, QR_kod);
 			img = Image([cf.fig_dir 'QRPlot_img.png']);

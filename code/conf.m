@@ -19,7 +19,10 @@ run([cf.cons_data_dir 'private_conf.m']);
 
 cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
+cf.email_subject = '%s elförbrukning under %s %d';
+cf.inv_l_se = {'Faktura för', 'Sammanfattning av'};
 
+cf.invoice = false;
 cf.yr = 2023;
 cf.m = 2;
 cf.years = [2020, 2021, 2022, 2023];
