@@ -14,7 +14,7 @@ per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 show_QR = false;
 %show_rpt = true;
 show_rpt = false;
-info_str = "Kommer fakureras via SBCs avi i början av april 2023.";
+info_str = compose("Kommer fakureras via SBCs avi i början av %s %d.", cf.month_l_se(cf.m+2,:), cf.yr);
 %info_str = "";
 PageLeftMargin = "15mm";
 
