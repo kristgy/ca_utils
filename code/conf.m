@@ -5,12 +5,12 @@ cf = struct();
 
 cf.dcom = @(fmt,num) strrep(sprintf(fmt,num),'.',',');
 
-cf.price_data_dir = '../price_data/';
 % FIXME Move to G: drive
 cf.cons_data_dir = '../../../afs_home/personal/housing/ref_data/';
 %cf.fig_dir = '../figures/';
 cf.fig_dir = [cf.cons_data_dir 'figures/'];
 cf.rep_dir = [cf.cons_data_dir 'reports/'];
+cf.price_data_dir = [cf.cons_data_dir 'price_data/'];
 cf.tmp_data_dir = cf.cons_data_dir;
 cf.rep_sum_file = 'invoice_summary.xlsx';
 cf.send_list_file = 'send_list';

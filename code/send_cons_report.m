@@ -18,7 +18,7 @@ props.setProperty('mail.smtp.socketFactory.class', ...
     'javax.net.ssl.SSLSocketFactory');
 props.setProperty('mail.smtp.socketFactory.port',cf.smtp_port);
 
-email_subject = compose(cf.email_subject,cf.inv_l_se{cf.invoice+1},cf.month_l_se(cf.m,:),cf.yr)
+email_subject = sprintf(cf.email_subject,cf.inv_l_se{cf.invoice+1},cf.month_l_se(cf.m,:),cf.yr)
 
 for u = 1:length(cons.users.ID)
 	ID_lut.(cons.users.ID{u}) = u
