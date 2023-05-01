@@ -20,11 +20,11 @@ run([cf.cons_data_dir 'private_conf.m']);
 cf.month_l = ['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
 cf.month_l_se = ['jan';'feb';'mar';'apr';'maj';'jun';'jul';'aug';'sep';'okt';'nov';'dec'];
 cf.email_subject = '%s elförbrukning under %s %d';
-cf.inv_l_se = {'Faktura för', 'Sammanfattning av'};
+cf.inv_l_se = {'Sammanfattning av','Faktura för'};
 
 cf.invoice = false;
 cf.yr = 2023;
-cf.m = 3;
+cf.m = 4;
 cf.years = [2020, 2021, 2022, 2023];
 %                  Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov    Dec
 % our price from Telge [ore/kWh]
@@ -42,7 +42,7 @@ cf.vattenf_avg = [  25.02  19.46  14.97   9.80  13.54  24.91   9.26  34.71  34.8
 %cf.data_file = 'All sessions within period for all users_2020-06-01--2021-07-01.csv';
 %cf.data_file = 'All sessions within period for all users_2020-07-01--2021-07-01.csv';
 %cf.data_file = 'All sessions within period for all users_2020-10-01--2021-10-01.csv';
-cf.data_file = 'All sessions within period for all users_2020-10-01--2023-04-01.csv';
+cf.data_file = 'All sessions within period for all users_2020-10-01--2023-05-01.csv';
 
 cf.price_data_file_str = 'data*.xlsx';
 cf.price_file = 'prices';
