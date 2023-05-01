@@ -222,7 +222,8 @@ for u = sel_usr
 	end
 end
 display(sprintf('Total invoiced consumption %1.2f kWh',accum_kWh))
-display(sprintf('Total invoiced cost %1.2f kr',accum_cost))
+display(sprintf('Total invoiced cost (ex VAT) %1.2f kr',sum([(rep_sum{:,4})])))
+display(sprintf('Total invoiced cost (inc VAT) %1.2f kr',accum_cost))
 if usr > 0
 	writecell(rep_sum,[cf.rep_dir cf.rep_sum_file],'WriteMode','replacefile');
 end
