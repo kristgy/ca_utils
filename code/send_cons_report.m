@@ -5,6 +5,9 @@ run conf.m
 
 load([cf.tmp_data_dir cf.cons_file],'cons')
 
+%dry_run = true
+dry_run = false
+
 setpref('Internet','E_mail', cf.sender_mail);
 setpref('Internet','SMTP_Server', cf.smtp_server);
 setpref('Internet','SMTP_Username', cf.smtp_user);
@@ -36,8 +39,11 @@ pauses = min_pause + (max_pause-min_pause).*rand(length(send_list),1)
 
 for user_nr = 1:length(send_list)
 	disp(cons.users.Email{ID_lut.(send_list{user_nr})})
-	% Send the email
-	%sendmail(cons.users.Email{ID_lut.(send_list{user_nr})},email_subject,cf.email_body,{[cf.rep_dir send_list{user_nr} '.pdf'], [cf.rep_dir 'filename.pdf']})
-	sendmail(cons.users.Email{ID_lut.(send_list{user_nr})},email_subject,cf.email_body,[cf.rep_dir send_list{user_nr} '.pdf'])
+	if ~dry_run
+		% Send the email with attachement
+		%sendmail(cons.users.Email{ID_lut.(send_list{user_nr})},email_subject,cf.email_body,{[cf.rep_dir send_list{user_nr} '.pdf'], [cf.rep_dir 'filename.pdf']})
+		% Send the email without attachement
+		sendmail(cons.users.Email{ID_lut.(send_list{user_nr})},email_subject,cf.email_body,[cf.rep_dir send_list{user_nr} '.pdf'])
+	end
 	pause(pauses(user_nr))
 end

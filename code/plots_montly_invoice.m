@@ -30,6 +30,10 @@ weeks_of_year = weeknum(datenum(cf.yr,cf.m,mondays(1))+[0:7:7*(length(mondays)-1
 d = repmat(weekdays,24,1);
 week_start_hours = hours((d(:)'==2)&~mod(hours-1,24));
 week_str = mat2cell(reshape(sprintf('v%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
+if (hours(end) - week_start_hours(end)) < 48
+	week_start_hours = week_start_hours(1:end-1);
+	week_str = week_str(1:end-1);
+end
 day_str = string(1:num_days_mon);
 
 cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
@@ -38,6 +42,7 @@ if cf.hourly_prices
 else
 	mon_price = cf.telge_avg(e_y_idx,cf.m)*ones(24,31);
 end
+min_price = min(mon_price(:));
 mon_trans = transpose(squeeze(cf.transf_price(e_y_idx,cf.m,weekdays,:)));
 mon_trans(:,num_days_mon+1:end) = NaN;
 tax = cf.eng_tax(e_y_idx)*ones(24,31);
@@ -54,7 +59,7 @@ for u = sel_usr
 	colororder([0 0 0; 1 0 0])
 
 	yyaxis left;
-	ar = bar(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:)+cf.markup, moms(:)]/100,1,'stacked');
+	ar = bar(hours,[tax(:)+cf.markup, mon_trans(:), mon_price(:), moms(:)]/100,1,'stacked');
 	ar(1).FaceColor = .55*[1 1 1];
 	ar(2).FaceColor = .65*[1 1 1];
 	ar(3).FaceColor = .75*[1 1 1];
@@ -63,7 +68,13 @@ for u = sel_usr
 	ylims = get(gca,'YLim');
 	plot([week_start_hours;week_start_hours],ylims,'k-')
 	text(week_start_hours+5,0.93*ylims(2)*ones(1,length(week_start_hours)),week_str);
-	set(gca,'YLim',ylims);
+%	set(gca,'YLim',[0 ylims(end)]);
+	if min_price < -5
+		l_ylim = floor(min_price/10)/10;
+		set(gca,'YLim',[l_ylim ylims(end)]);
+	else
+		set(gca,'YLim',[0 ylims(end)]);
+	end
 	fixed = 'Energiskatt';
 	if cf.hourly_prices
 		fixed = [fixed '+påslag'];
@@ -83,7 +94,7 @@ for u = sel_usr
 	set(gca,'XLim',[1 24*num_days_mon]);
 
 	xlabel('Dag i månaden')
-	title(sprintf('Pris och laddning per timme för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])));
+	tit = title(sprintf('Pris och laddning per timme för %s under %s %d (total laddning %.1f kWh)', cons.users.FirstName{u}, cf.month_l_se(cf.m,:), cf.yr, sum(cons.day_of_week(u,c_y_idx,cf.m,:,:,:),[2,3,4,5,6])),'FontSize',10,'FontWeight','normal');
 	if printfigs
 	    set(gcf,'paperunits','centimeters','papersize',papersize,'paperposition',[offs_x,offs_y,papersize(1)-offs_x,papersize(2)-offs_y])
 		print([cf.fig_dir 'consumption_day_of_month_' cons.users.ID{u}],'-dpng')
