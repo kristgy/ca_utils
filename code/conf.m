@@ -71,14 +71,17 @@ cf.markup = 10; % [ore/kWh] % Including estimate of elcertificat, based on fit o
 
 cf.VAT = 0.25;
 
+% price info (NB! incl VAT):
+% https://www.vattenfalleldistribution.se/kund-i-elnatet/elnatspriser/elnatspriser-och-avtalsvillkor/
 cf.transf_price = NaN*ones(cf.num_years,12,7,24);
 cf.transf_price(1,:) = 25.6;
 cf.transf_price(2,1:3,:) = 24.4;
+% change to time-based transfer pricing
 cf.transf_price(2,4:12,:) = 14.4;
 cf.transf_price(2,11:12,2:6,7:22) = 48.0;
 cf.transf_price(3,:) = 14.4;
 cf.transf_price(3,[1:3 11:12],2:6,7:22) = 48.0;
-
 cf.transf_price(4,:) = cf.transf_price(3,:)
-%cf.transf_price(4,:) = 14.4;
-%cf.transf_price(4,[1:3 11:12],2:6,7:22) = 48.0;
+% price change by Vattenfall Eldistr. on July 1st 2023
+cf.transf_price(4,7:12,:) = 9.6;
+cf.transf_price(4,11:12,2:6,7:22) = 31.6;
