@@ -30,10 +30,6 @@ weeks_of_year = weeknum(datenum(cf.yr,cf.m,mondays(1))+[0:7:7*(length(mondays)-1
 d = repmat(weekdays,24,1);
 week_start_hours = hours((d(:)'==2)&~mod(hours-1,24));
 week_str = mat2cell(reshape(sprintf('v%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
-if (hours(end) - week_start_hours(end)) < 48
-	week_start_hours = week_start_hours(1:end-1);
-	week_str = week_str(1:end-1);
-end
 day_str = string(1:num_days_mon);
 
 cons_hour = squeeze(sum(cons.day_of_month,6,'omitnan'));
@@ -67,7 +63,11 @@ for u = sel_usr
 	hold on 
 	ylims = get(gca,'YLim');
 	plot([week_start_hours;week_start_hours],ylims,'k-')
-	text(week_start_hours+5,0.93*ylims(2)*ones(1,length(week_start_hours)),week_str);
+	if (hours(end) - week_start_hours(end)) < 48
+		text(week_start_hours(1:end-1)+5,0.93*ylims(2)*ones(1,length(week_start_hours)-1),week_str(1:end-1));
+	else
+		text(week_start_hours+5,0.93*ylims(2)*ones(1,length(week_start_hours)),week_str);
+	end
 %	set(gca,'YLim',[0 ylims(end)]);
 	if min_price < -5
 		l_ylim = floor(min_price/10)/10;
