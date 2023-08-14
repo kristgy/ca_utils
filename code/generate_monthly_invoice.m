@@ -14,7 +14,8 @@ per = compose('%s - %s',datestr(dtv,cf.dtfmt),datestr(dte,cf.dtfmt));
 show_QR = false;
 %show_rpt = true;
 show_rpt = false;
-info_str = compose("Kommer fakureras via SBCs avi i början av %s %d.", cf.month_l_se(cf.m+2,:), cf.yr);
+%info_str = compose("Kommer fakureras via SBCs avi i början av %s %d.", cf.month_l_se(cf.m+2,:), cf.yr);
+info_str = "Kommer fakureras via SBCs avi.";
 %info_str = "";
 PageLeftMargin = "15mm";
 
