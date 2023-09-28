@@ -12,6 +12,9 @@ printfigs = true;
 %show_plots = true;
 show_plots = false;
 
+week_str_offs_x = 5;
+week_str_scale_y = .93;
+
 load([cf.tmp_data_dir cf.cons_file],'cons');
 c_y_idx = find(cons.years==cf.yr);
 load([cf.tmp_data_dir cf.price_file],'price')
@@ -27,6 +30,7 @@ start_weekday_mon = weekday(sprintf('%d-%d-01',price.years(p_y_idx),cf.m));
 weekdays = mod(start_weekday_mon+days-2,7) + 1;
 mondays = days(weekdays==2);
 weeks_of_year = weeknum(datenum(cf.yr,cf.m,mondays(1))+[0:7:7*(length(mondays)-1)],2,1);
+first_week = weeknum(datenum(cf.yr,cf.m,1),2,1);
 d = repmat(weekdays,24,1);
 week_start_hours = hours((d(:)'==2)&~mod(hours-1,24));
 week_str = mat2cell(reshape(sprintf('v%02d',weeks_of_year),3,length(mondays))',ones(1,length(mondays)));
@@ -64,10 +68,14 @@ for u = sel_usr
 	ylims = get(gca,'YLim');
 	plot([week_start_hours;week_start_hours],ylims,'k-')
 	if (hours(end) - week_start_hours(end)) < 48
-		text(week_start_hours(1:end-1)+5,0.93*ylims(2)*ones(1,length(week_start_hours)-1),week_str(1:end-1));
+		text(week_start_hours(1:end-1)+week_str_offs_x,week_str_scale_y*ylims(2)*ones(1,length(week_start_hours)-1),week_str(1:end-1));
 	else
-		text(week_start_hours+5,0.93*ylims(2)*ones(1,length(week_start_hours)),week_str);
+		text(week_start_hours+week_str_offs_x,week_str_scale_y*ylims(2)*ones(1,length(week_start_hours)),week_str);
 	end
+	if mondays(1) > 2
+		text(week_str_offs_x,week_str_scale_y*ylims(2),sprintf('v%02d',first_week));
+	end
+
 %	set(gca,'YLim',[0 ylims(end)]);
 	if min_price < -5
 		l_ylim = floor(min_price/10)/10;
