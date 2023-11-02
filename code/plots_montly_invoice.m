@@ -67,7 +67,7 @@ for u = sel_usr
 	hold on 
 	ylims = get(gca,'YLim');
 	plot([week_start_hours;week_start_hours],ylims,'k-')
-	if (hours(end) - week_start_hours(end)) < 48
+	if (hours(end) - week_start_hours(end)) < 47
 		text(week_start_hours(1:end-1)+week_str_offs_x,week_str_scale_y*ylims(2)*ones(1,length(week_start_hours)-1),week_str(1:end-1));
 	else
 		text(week_start_hours+week_str_offs_x,week_str_scale_y*ylims(2)*ones(1,length(week_start_hours)),week_str);
